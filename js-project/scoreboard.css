@@ -1,0 +1,25 @@
+#scoreboard {
+    width: 10%;
+    height: 10%;
+    top: -50%;
+    left: 45%;
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(30px);
+    position: absolute;
+    transform: scale(.4);
+    transition: all .3s ease;
+}
+
+#scoreboard.appear {
+    transform: scale(1);
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    visibility: visible;
+    opacity: 0.9;
+}
