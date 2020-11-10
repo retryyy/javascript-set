@@ -3,7 +3,6 @@
     height: 10%;
     top: -50%;
     left: 45%;
-    position: fixed;
     visibility: hidden;
     opacity: 0;
     border: 2px solid rgba(0, 0, 0, 0.1);
