@@ -2,32 +2,71 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
+    min-width: 1024px;
     height: 100vh;
     display: flex;
     background-image: url('wooden.jpg');
     background-size: cover;
 }
 
+#name {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    color:  rgba(255, 255, 255, 0.15);
+    font-size: 3000%;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(.6);
+    filter: blur(20px);
+    transition: all .3s ease;
+}
+
+#name.appear {
+    opacity: 1;
+    filter: blur(1px);
+    transform: scale(1);
+    transition: all .6s ease;
+}
+
 #cards-board {
-    width: 580px;
     height: 640px;
+    min-width: 580px;
     margin: auto;
     display: flex;
     flex-wrap: wrap;
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.1);
     transition: all .5s ease;
+    padding: 1%;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, .2);
 }
 
 #cards-board.appear {
     opacity: 0;
 }
 
+#cards-board.lock {
+    pointer-events: none;
+}
+
+#cards-board.shrink {
+    transform: rotate(90deg) scale(.2);
+    filter: blur(20px);
+    opacity: 0;
+}
+
 .card {
-    width: calc(24% - 10px);
-    height: calc(33.33% - 10px);
+    width: calc(24% - 5px);
+    height: calc(33.33% - 15px);
     position: relative;
     margin: 5px;
     background: transparent;
@@ -35,7 +74,6 @@ body {
     transform: scale(1);
     transition: transform .1s;
 }
-
 
 .card.active {
     background: orange;
