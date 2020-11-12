@@ -1,86 +1,104 @@
 #menu {
-    width: 60%;
-    height: 60%;
-    top: 20%;
-    left: 20%;
-    position: absolute;
-    opacity: .9;
+    width: 10%;
+    height: 10%;
+    top: -50%;
+    left: 45%;
+    opacity: 0;
     background-color: rgba(0, 0, 0, .6);
     border: 2px solid rgba(0, 0, 0, .1);
     backdrop-filter: blur(30px);
-    transform: scale(.6);
+    position: absolute;
+    transform: scale(.4);
     transition: all .5s ease;
-    opacity: 0;
-    margin: auto;
-    z-index: 5;
-    display: inline-block;
-    text-align: center;
 }
-
 #menu.appear {
     transform: scale(1);
     width: 70%;
     min-width: 750px;
+    min-height: 550px;
     height: 80%;
     top: 10%;
     left: 15%;
     opacity: .9;
 }
 
-.close {
-    position: absolute;
-    right: 1%;
-    top: 1%;
-    width: 32px;
-    height: 32px;
-    opacity: 0.5;
+#menu .switch {
+    width: 30%;
+    height: 60%;
+    text-align: initial;
+    z-index: 10;
+}
+#menu .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+#menu .slider {
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+#menu .slider:before {
+    content: "";
+    height: 100%;
+    width: 50%;
+    background-color: white;
+    transition: .4s;
+}
+#menu input:checked + .slider {
+    background-color: rgba(90, 150, 200, .7);
+}
+#menu input:checked + .slider:before {
+    transform: translateX(100%);
 }
 
-.close:hover {
-    opacity: 1;
+#menu td {
+    width: 50%;
+    margin: auto;
+}
+#menu tr:first-child {
+    font-size: 300%;
+    background: rgba(255, 255, 255, 0.1);
+}
+#menu tr {
+    border-bottom: 1px solid white;
+    transition: .3s ease-in-out;
+}
+#menu tr:not(:first-child):hover {
+    transform: scale(1.03);
+}
+#menu tr:last-child {
+    border-bottom: none;
+}
+#menu table {
+    width: 90%;
+    border-collapse: collapse;
+    text-align: center;
+    vertical-align: middle;
+    height: 100%;
+    margin: auto;
+    font-size: x-large;
+    font-weight: bold;
+    color: white;
 }
 
-.close:before, .close:after {
-    position: absolute;
-    left: 15px;
-    content: ' ';
-    height: 33px;
-    width: 2px;
-    background-color: rgb(255, 255, 255);
-}
-
-.close:before {
-    transform: rotate(45deg);
-}
-
-.close:after {
-    transform: rotate(-45deg);
-}
-
-button {
+#menu #start {
 	background-color: rgba(255, 255, 255, 0.4);
 	border: none;
 	box-shadow: 3px 3px 5px rgba(0, 0, 0, .25);
 	width: 20%;
     padding: 2%;
-    font-size: 150%;
+    font-size: 100%;
+    transition: 0.3s ease-in-out;
 }
-
-button:hover {
-	background-color:rgba(255, 255, 255, 0.7);
-	transition: 0.2s;
+#menu #start:hover {
+    background-color:rgba(255, 255, 255, 0.7);
 	cursor: pointer;
-	color: white
-}
-
-hr {
-    opacity: .5;
-    margin: 15px;
-}
-
-#settings_title {
-    font-size: 400%;
     color: white;
-    margin: 5%;
-    font-weight: bold;
+    width: 30%;
+    height: 60%;
 }

@@ -12,50 +12,73 @@
     <link rel='stylesheet' type='text/css' media='screen' href='sidebar.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='switch.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='slider.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='close.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='spinner.css'>
 </head>
 <body>
     <div id="welcome">Welcome!</div>
+
     <div id="menu">
         <a href="#" class="close"></a>
-        <p id="settings_title">NEW GAME SETTINGS</p>
-        <hr>
-        <div id="mode">
-            <label class="desc"><p>COMPETITIVE MODE</p></label>
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <hr>
-        <div class="toggle_radio">
-            <input type="radio" checked class="toggle_option" id="first_toggle" name="toggle_option"/>
-            <input type="radio" class="toggle_option" id="second_toggle" name="toggle_option"/>
-            <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option"/>
-            <label for="first_toggle">
-                <p>NO ASSIST</p>
-            </label>
-            <label for="second_toggle">
-                <p>SHOW NUMBER OF SETS ON DEMAND</p>
-            </label>
-            <label for="third_toggle">
-                <p>SHOW A SET ON DEMAND</p>
-            </label>
-            <div class="toggle_option_slider"></div>
-        </div>
-        <hr>
-        <div id="players">
-            <label class="desc"><p>NUMBER OF PLAYERS</p></label>
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <hr>
-        <button id="start">START GAME</button>
+        <table>
+            <tr>
+                <td colspan="2">
+                    NEW GAME SETTINGS
+                </td>
+            </tr>
+        <tr>
+            <td>
+                COMPETITIVE MODE
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="toggle_radio">
+                    <input type="radio" checked class="toggle_option" id="first_toggle" name="toggle_option"/>
+                    <input type="radio" class="toggle_option" id="second_toggle" name="toggle_option"/>
+                    <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option"/>
+                    <label for="first_toggle">
+                        <p>NO ASSIST</p>
+                    </label>
+                    <label for="second_toggle">
+                        <p>SHOW THE NUMBER OF SETS ON THE TABLE</p>
+                    </label>
+                    <label for="third_toggle">
+                        <p>SHOW A SET ON THE TABLE</p>
+                    </label>
+                    <div id="toggle_option_slider"></div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                NUMBER OF PLAYERS
+            </td>
+            <td>
+                <span class="stepper">
+                    <button>–</button>
+                    <input type="number" id="stepper" value="1" min="1" max="10" step="1" readonly>
+                    <button>+</button>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="start">START GAME</button>
+            </td>
+        </tr>
+    </table>
     </div>
+    
     <div id="sidebar">
         <a id="new">New game</a>
-        <a href="#">Description</a>
+        <a id="desc">Description</a>
         <a href="#">Contact</a>
     </div>
     <div id="sidebarClick"><p>&#187;</p></div>

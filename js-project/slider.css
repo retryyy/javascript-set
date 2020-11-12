@@ -3,8 +3,7 @@
     background: rgba(255,255,255,.1);
     margin: 4px auto;
     overflow: hidden;
-    position: relative;
-    height: 10%;
+    height: 70%;
     width: 66%;
 }
 
@@ -32,23 +31,23 @@
     word-spacing: 5px;
 }
 
-.toggle_option_slider {
+#toggle_option_slider {
     width: 33.333%;
     height: 100%;
     position: absolute;
     transition: all .4s ease;
 }
 
-#first_toggle:checked ~ .toggle_option_slider {
+#first_toggle:checked ~ #toggle_option_slider {
     background: rgba(255, 255, 255, .5);
 }
 
-#second_toggle:checked ~ .toggle_option_slider{
+#second_toggle:checked ~ #toggle_option_slider{
     background: rgba(255, 255, 255, .5);
     transform: translateX(100%);
 }
 
-#third_toggle:checked ~ .toggle_option_slider{
+#third_toggle:checked ~ #toggle_option_slider{
     background: rgba(255, 255, 255, .5);
     transform: translateX(200%);
 }

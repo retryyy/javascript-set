@@ -1,0 +1,30 @@
+.stepper input {
+    text-align: center;
+    border: 0;
+    background: rgba(230, 230, 230, .2);
+    font-size: 100%;
+    font-weight: bold;
+    color: rgba(255, 255, 255, .8);
+    height: 70%;
+    width: 30%;
+}
+
+.stepper button {
+    font-weight: bold;
+    height: 70%;
+    color: #333;
+}
+
+.stepper button {
+	background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+    outline: none;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, .25);
+	width: 20%;
+    padding: 2%;
+    font-size: 100%;
+}
+.stepper button:hover {
+	cursor: pointer;
+    color: white
+}
