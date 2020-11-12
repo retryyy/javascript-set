@@ -4,25 +4,21 @@
     margin: auto;
     display: flex;
     flex-wrap: wrap;
-    transform: rotate(90deg) scale(1.1);
+    transform: rotate(90deg) scale(.2);
     transition: all .5s ease;
     padding: 1%;
     border-radius: 8px;
     background-color: rgba(255, 255, 255, .2);
-}
-
-#cards-board.appear {
     opacity: 0;
-}
-
-#cards-board.lock {
+    filter: blur(20px);
     pointer-events: none;
 }
 
-#cards-board.shrink {
-    transform: rotate(90deg) scale(.2);
-    filter: blur(20px);
-    opacity: 0;
+#cards-board.appear {
+    opacity: 1;
+    filter: blur(0);
+    transform: rotate(90deg) scale(1.1);
+    pointer-events: all;
 }
 
 .card {

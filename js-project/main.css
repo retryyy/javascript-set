@@ -12,3 +12,9 @@ body {
     background-image: url('wooden.jpg');
     background-size: cover;
 }
+
+div.hidden:not(#welcome) {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 2s ease-in-out;
+}
