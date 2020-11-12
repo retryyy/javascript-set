@@ -10,7 +10,7 @@ function sleep(ms) {
 // DOM
 let sidebarClick = document.querySelector('#sidebarClick');
 let sidebar = document.querySelector('#sidebar');
-let logo = document.querySelector('#name');
+let logo = document.querySelector('#logo');
 let board = document.querySelector('#cards-board');
 let scoreboard = document.querySelector('#scoreboard');
 let table = scoreboard.querySelector("table");
