@@ -13,7 +13,7 @@ let sidebarClick = document.querySelector('#sidebarClick');
 let sidebar = document.querySelector('#sidebar');
 let menu = document.querySelector('#menu');
 let menuClose = menu.querySelector('.close');
-let submit = menu.querySelector('#submit');
+let start = menu.querySelector('#start');
 let logo = document.querySelector('#logo');
 let board = document.querySelector('#cards-board');
 let cards = document.querySelectorAll('.card');
@@ -28,7 +28,6 @@ async function loadPage() {
     welcome.classList.add('appear');
 
     let elements = document.body.getElementsByTagName('div');
-    console.log(elements);
     for (elem of elements) {
         elem.classList.add('hidden');
     }
@@ -45,11 +44,12 @@ async function loadPage() {
     for (elem of elements) {
         elem.classList.remove('hidden');
     }
+    menu.classList.toggle('appear');
 }
 
 // scoreboard visibility
 document.addEventListener("keydown", (event) => {
-    if (event.keyCode === 83 && !sidebar.classList.contains('opened')) {
+    if (event.keyCode === 83 && !sidebar.classList.contains('opened') && !menu.classList.contains('appear')) {
         scoreboard.classList.add('appear');
         board.classList.remove('appear')
     }
@@ -132,7 +132,7 @@ sidebar.querySelector('#new').addEventListener('click', () => {
     logo.classList.remove('appear');
 });
 
-submit.addEventListener('click', () => {
+start.addEventListener('click', () => {
     menu.classList.remove('appear');
     board.classList.add('appear');
     gameOngoing = true;

@@ -14,6 +14,7 @@
     margin: auto;
     z-index: 5;
     display: inline-block;
+    text-align: center;
 }
 
 #menu.appear {
@@ -56,8 +57,30 @@
     transform: rotate(-45deg);
 }
 
-#menu #submit {
-    position: absolute;
-    margin: 0 auto;
-    width: 20%;
+button {
+	background-color: rgba(255, 255, 255, 0.4);
+	border: none;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, .25);
+	width: 20%;
+    padding: 2%;
+    font-size: 150%;
+}
+
+button:hover {
+	background-color:rgba(255, 255, 255, 0.7);
+	transition: 0.2s;
+	cursor: pointer;
+	color: white
+}
+
+hr {
+    opacity: .5;
+    margin: 15px;
+}
+
+#settings_title {
+    font-size: 400%;
+    color: white;
+    margin: 5%;
+    font-weight: bold;
 }

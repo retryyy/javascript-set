@@ -68,6 +68,5 @@
 }
 
 #sidebarClick:hover {
-    background-color: rgba(255, 255, 255, .404);
+    background-color: rgba(255, 255, 255, .4);
 }
-

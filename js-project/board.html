@@ -10,12 +10,48 @@
     <link rel='stylesheet' type='text/css' media='screen' href='cardsboard.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='scoreboard.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='sidebar.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='switch.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='slider.css'>
 </head>
 <body>
     <div id="welcome">Welcome!</div>
     <div id="menu">
         <a href="#" class="close"></a>
-        <button id="submit">SUBMIT</button>
+        <p id="settings_title">NEW GAME SETTINGS</p>
+        <hr>
+        <div id="mode">
+            <label class="desc"><p>COMPETITIVE MODE</p></label>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <hr>
+        <div class="toggle_radio">
+            <input type="radio" checked class="toggle_option" id="first_toggle" name="toggle_option"/>
+            <input type="radio" class="toggle_option" id="second_toggle" name="toggle_option"/>
+            <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option"/>
+            <label for="first_toggle">
+                <p>NO ASSIST</p>
+            </label>
+            <label for="second_toggle">
+                <p>SHOW NUMBER OF SETS ON DEMAND</p>
+            </label>
+            <label for="third_toggle">
+                <p>SHOW A SET ON DEMAND</p>
+            </label>
+            <div class="toggle_option_slider"></div>
+        </div>
+        <hr>
+        <div id="players">
+            <label class="desc"><p>NUMBER OF PLAYERS</p></label>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <hr>
+        <button id="start">START GAME</button>
     </div>
     <div id="sidebar">
         <a id="new">New game</a>
