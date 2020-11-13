@@ -1,24 +1,17 @@
 #scoreboard {
-    width: 10%;
-    height: 10%;
-    top: -50%;
-    left: 45%;
     opacity: 0;
     background-color: rgba(0, 0, 0, .6);
     border: 2px solid rgba(0, 0, 0, .1);
-    backdrop-filter: blur(30px);
     position: absolute;
-    transform: scale(.4);
-    transition: all .3s ease;
+    width: 70%;
+    min-width: 700px;
+    height: 80%;
+    transition: all .4s ease;
+    transform: translate(calc(15vw), calc(-50vh)) scale(.1);
 }
 
-#scoreboard.appear {
-    transform: scale(1);
-    width: 70%;
-    min-width: 750px;
-    height: 80%;
-    top: 10%;
-    left: 15%;
+#scoreboard.appear { 
+    transform: translate(calc(15vw), calc(10vh)) scale(1);
     opacity: .9;
 }
 

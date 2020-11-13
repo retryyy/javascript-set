@@ -39,7 +39,7 @@ async function loadPage() {
     
     menu.classList.remove('appear');
     logo.classList.add('appear');
-    welcome.classList.remove('appear');
+    welcome.classList.add('disappear');
     
     for (elem of elements) {
         elem.classList.remove('hidden');
@@ -56,7 +56,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => {
     if (event.keyCode === 83 && !sidebar.classList.contains('opened')) {
         scoreboard.classList.remove('appear');
-        board.classList.remove('appear');
+        board.classList.add('appear');
     }
 });
 

@@ -1,59 +1,17 @@
 #menu {
-    width: 10%;
-    height: 10%;
-    top: -50%;
-    left: 45%;
     opacity: 0;
     background-color: rgba(0, 0, 0, .6);
     border: 2px solid rgba(0, 0, 0, .1);
-    backdrop-filter: blur(30px);
     position: absolute;
-    transform: scale(.4);
+    width: 70%;
+    min-width: 700px;
+    height: 80%;
     transition: all .5s ease;
+    transform: translate(calc(15vw), calc(-50vh)) scale(.1);
 }
 #menu.appear {
-    transform: scale(1);
-    width: 70%;
-    min-width: 750px;
-    min-height: 550px;
-    height: 80%;
-    top: 10%;
-    left: 15%;
+    transform: translate(calc(15vw), calc(10vh)) scale(1);
     opacity: .9;
-}
-
-#menu .switch {
-    width: 30%;
-    height: 60%;
-    text-align: initial;
-    z-index: 10;
-}
-#menu .switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-#menu .slider {
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-}
-#menu .slider:before {
-    content: "";
-    height: 100%;
-    width: 50%;
-    background-color: white;
-    transition: .4s;
-}
-#menu input:checked + .slider {
-    background-color: rgba(90, 150, 200, .7);
-}
-#menu input:checked + .slider:before {
-    transform: translateX(100%);
 }
 
 #menu td {
@@ -67,9 +25,6 @@
 #menu tr {
     border-bottom: 1px solid white;
     transition: .3s ease-in-out;
-}
-#menu tr:not(:first-child):hover {
-    transform: scale(1.03);
 }
 #menu tr:last-child {
     border-bottom: none;
@@ -99,6 +54,4 @@
     background-color:rgba(255, 255, 255, 0.7);
 	cursor: pointer;
     color: white;
-    width: 30%;
-    height: 60%;
 }
