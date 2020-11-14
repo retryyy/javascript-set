@@ -1,0 +1,39 @@
+#game {
+    position: absolute;
+    height: 90%;
+    width: 70%;
+    opacity: 0;
+    transform: translate(calc(15vw), calc(5vh)) scale(.2);
+    transition: all .4s ease;
+}
+
+#game.appear {
+    transform: translate(calc(15vw), calc(5vh));
+    opacity: 1;
+}
+
+#game #container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 63%;
+    min-height: 768px;
+    min-width: 1024px;
+}
+
+#game #container #layout {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: white;
+    border-collapse: collapse;
+}
+
+/*#game #layout td {
+    border: 2px solid white;
+}*/
+#game #layout tr:nth-child(2) {
+    height: 10%;
+}
+#game #layout td:nth-child(2) {
+    width: 70%;
+}

@@ -1,21 +1,22 @@
 #cards-board {
-    height: 640px;
-    min-width: 580px;
+    position: relative;
     margin: auto;
+    width: 80%;
+    height: 100%;
+
     display: flex;
     flex-wrap: wrap;
-    transform: rotate(90deg) scale(.2);
-    transition: all .5s ease;
+
+    transform: rotate(90deg);
+
     padding: 1%;
     border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, .5);
     background-color: rgba(255, 255, 255, .2);
-    opacity: 0;
-    pointer-events: none;
-}
-#cards-board.appear {
-    opacity: 1;
-    transform: rotate(90deg) scale(1.1);
     pointer-events: all;
+}
+#cards-board.lock {
+    pointer-events: none;
 }
 
 .card {

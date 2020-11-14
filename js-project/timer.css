@@ -1,10 +1,9 @@
 #background {
-    position: absolute;
     width: 50%;
-    height: 5%;
+    height: 50%;
     background-color: rgb(255, 255, 255, .2);
-    transform: translate(calc(25vw), calc(90vh));
     border-radius: 4px;
+    margin: auto;
 }
 
 #timer {
@@ -13,3 +12,9 @@
     border-radius: 4px;
     background-color: rgba(255, 255, 255, .5);
 }
+
+#btnStart {
+    position: absolute;
+    transform: translate(500px);
+}
+

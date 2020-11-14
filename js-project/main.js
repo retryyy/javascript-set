@@ -15,9 +15,10 @@ let menu = document.querySelector('#menu');
 let menuClose = menu.querySelector('.close');
 let start = menu.querySelector('#start');
 let logo = document.querySelector('#logo');
-let board = document.querySelector('#cards-board');
-let cards = document.querySelectorAll('.card');
-let timer = document.querySelector('#timer');
+let game = document.querySelector('#game');
+let board = game.querySelector('#cards-board');
+let cards = board.querySelectorAll('.card');
+let timer = game.querySelector('#timer');
 let scoreboard = document.querySelector('#scoreboard');
 let table = scoreboard.querySelector("table");
 
@@ -51,13 +52,13 @@ async function loadPage() {
 document.addEventListener("keydown", (event) => {
     if (event.keyCode === 83 && !sidebar.classList.contains('opened') && !menu.classList.contains('appear')) {
         scoreboard.classList.add('appear');
-        board.classList.remove('appear')
+        game.classList.remove('appear');
     }
 });
 document.addEventListener("keyup", (event) => {
     if (event.keyCode === 83 && !sidebar.classList.contains('opened')) {
         scoreboard.classList.remove('appear');
-        board.classList.add('appear');
+        game.classList.add('appear');
     }
 });
 
@@ -74,7 +75,7 @@ function tick() {
 async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
-        board.classList.toggle('lock');
+        board.classList.add('lock');
         
         await sleep(1000);
         tickedCards.forEach(card => card.classList.add('fade'));
@@ -82,7 +83,7 @@ async function exchange() {
         moveOut(tickedCards);
         await sleep(1000);
         await moveBack(tickedCards);
-        board.classList.toggle('lock');
+        board.classList.remove('lock');
     }
 }
 
@@ -112,10 +113,10 @@ sidebarClick.addEventListener('click', () => {
 
         if (sidebar.classList.contains('opened')) {
             menu.classList.remove('appear');
-            board.classList.remove('appear');
+            game.classList.remove('appear');
             logo.classList.add('appear');
         } else {
-            board.classList.add('appear');
+            game.classList.add('appear');
             logo.classList.remove('appear');
         }
     }  
@@ -128,13 +129,13 @@ sidebar.querySelector('#new').addEventListener('click', () => {
     sidebar.classList.toggle('opened');
     sidebarClick.firstElementChild.classList.remove('click');
 
-    board.classList.remove('appear');
+    game.classList.remove('appear');
     logo.classList.remove('appear');
 });
 
 start.addEventListener('click', () => {
     menu.classList.remove('appear');
-    board.classList.add('appear');
+    game.classList.add('appear');
     gameOngoing = true;
 });
 
