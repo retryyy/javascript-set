@@ -1,6 +1,6 @@
 #menu {
     opacity: 0;
-    background-color: rgba(0, 0, 0, .6);
+    background-color: rgb(15, 7, 1, .7);
     border: 2px solid rgba(0, 0, 0, .1);
     position: absolute;
     width: 70%;
@@ -10,8 +10,8 @@
     transform: translate(calc(15vw), calc(-50vh)) scale(.1);
 }
 #menu.appear {
-    transform: translate(calc(15vw), calc(10vh)) scale(1);
     opacity: .9;
+    transform: translate(calc(15vw), calc(10vh)) scale(1);
 }
 
 #menu td {
@@ -23,11 +23,8 @@
     background: rgba(255, 255, 255, 0.1);
 }
 #menu tr {
-    border-bottom: 1px solid white;
+    border-top: 1px solid white;
     transition: .3s ease-in-out;
-}
-#menu tr:last-child {
-    border-bottom: none;
 }
 #menu table {
     width: 90%;

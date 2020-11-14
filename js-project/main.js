@@ -17,6 +17,7 @@ let start = menu.querySelector('#start');
 let logo = document.querySelector('#logo');
 let board = document.querySelector('#cards-board');
 let cards = document.querySelectorAll('.card');
+let timer = document.querySelector('#timer');
 let scoreboard = document.querySelector('#scoreboard');
 let table = scoreboard.querySelector("table");
 
@@ -31,7 +32,7 @@ async function loadPage() {
     for (elem of elements) {
         elem.classList.add('hidden');
     }
-    await sleep(3000);
+    await sleep(000);
 
     sidebarClick.classList.add('opened');
     sidebar.classList.add('opened');
@@ -154,29 +155,30 @@ for (i = 0; i < inc.length; i++) {
         min = incI.getAttribute("min"),
         max = incI.getAttribute("max"),
         step = incI.getAttribute("step");
-    document
-        .getElementById(id)
-        .previousElementSibling.setAttribute(
-        "onclick",
-        "stepperInput('" + id + "', -" + step + ", " + min + ")"
-        ); 
-    document
-        .getElementById(id)
-        .nextElementSibling.setAttribute(
-        "onclick",
-        "stepperInput('" + id + "', " + step + ", " + max + ")"
-        ); 
+    document.getElementById(id)
+        .previousElementSibling.setAttribute('onclick', "stepperInput('" + id + "', -" + step + ", " + min + ")"); 
+    document.getElementById(id)
+        .nextElementSibling.setAttribute('onclick', "stepperInput('" + id + "', " + step + ", " + max + ")"); 
 }
 
 function stepperInput(id, s, m) {
     var el = document.getElementById(id);
-    if (s > 0) {
-        if (parseInt(el.value) < m) {
+    if (s > 0 &&  parseInt(el.value) < m) {
         el.value = parseInt(el.value) + s;
-        }
-    } else {
-        if (parseInt(el.value) > m) {
+    } else if (parseInt(el.value) > m) {
         el.value = parseInt(el.value) + s;
-        }
     }
+}
+
+// timer
+document.querySelector('#btnStart').addEventListener('click', countDown, false);
+
+let sec = 10;
+const maxSec = 10;
+function countDown() {
+	timer.style.width = (sec * 100 / maxSec) + "%";
+	sec--;
+	if (sec >= 0) {
+		setTimeout(countDown, 1000);
+	}
 }
