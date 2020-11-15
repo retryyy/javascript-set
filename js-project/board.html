@@ -11,6 +11,7 @@
     <link rel='stylesheet' type='text/css' media='screen' href='players.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='cardsboard.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='timer.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='assist.css'>
 
     <link rel='stylesheet' type='text/css' media='screen' href='scoreboard.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='sidebar.css'>
@@ -158,13 +159,13 @@
         <div id="container">
             <table id="layout">
                 <tr>
-                    <td >
+                    <td>
                         <table id="players">
                             <tr>
                                 <td>Jill</td>
                             <tr>
                                 <td>Eve</td>
-                                </tr>
+                            </tr>
                             <tr>
                                 <td>Eve</td>
                             </tr>
@@ -191,7 +192,7 @@
                             </tr>
                         </table>
                     </td>
-                    <td>
+                    <td colspan="2">
                         <div id="cards-board">
                             <div class="card">
                                 <img src="icons/1HgD.svg"/>
@@ -233,10 +234,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
+                    <td id="assist_number">
+                        <h1 class="assist">NUMBER OF SETS</h1>
+                    </td>
+                    <td>
                         <div id="background">
                             <div id="timer"></div>
                         </div>
+                    </td>
+                    <td id="assist_show">
+                        <h1 class="assist">SHOW A SET</h1>
                     </td>
                 </tr>
             </table>

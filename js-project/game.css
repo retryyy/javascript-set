@@ -28,12 +28,10 @@
     border-collapse: collapse;
 }
 
-/*#game #layout td {
-    border: 2px solid white;
-}*/
+
 #game #layout tr:nth-child(2) {
     height: 10%;
 }
 #game #layout td:nth-child(2) {
-    width: 70%;
+    width: 40%;
 }
