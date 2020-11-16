@@ -7,7 +7,6 @@
 
 body {
     display: flex;
-    min-height: 768px;
     background-image: url('wooden.jpg');
     background-size: cover;
 }

@@ -16,6 +16,7 @@ let menuClose = menu.querySelector('.close');
 let start = menu.querySelector('#start');
 let logo = document.querySelector('#logo');
 let game = document.querySelector('#game');
+let layout = document.querySelector('#layout');
 let board = game.querySelector('#cards-board');
 let cards = board.querySelectorAll('.card');
 let timer = game.querySelector('#timer');
@@ -64,7 +65,7 @@ document.addEventListener("keyup", (event) => {
 
 // scoreboard fill
 let players = 10;
-table.style.height = ["calc(100% *", players, "/ 10)"].join(" ");
+table.style.height = `calc(100% * ${players} / 10)`;
 
 // cards
 function tick() {
@@ -76,11 +77,10 @@ async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
         board.classList.add('lock');
-        
         await sleep(1000);
         tickedCards.forEach(card => card.classList.add('fade'));
         await sleep(1000);
-        moveOut(tickedCards);
+        await moveOut(tickedCards);
         await sleep(1000);
         await moveBack(tickedCards);
         board.classList.remove('lock');
@@ -90,14 +90,27 @@ async function exchange() {
 function moveOut(tickedCards) {
     tickedCards.forEach(card => card.firstElementChild.src = "icons/2HrS.svg");
     tickedCards.forEach(card => card.classList.remove('active'));
-    tickedCards.forEach(card => card.classList.add('new'));
     tickedCards.forEach(card => card.classList.remove('fade'));
+
+    let bounds = board.getBoundingClientRect();
+    let half = (bounds.top + bounds.bottom) / 2;
+    
+    tickedCards.forEach(card => {
+        let cHalf = (card.getBoundingClientRect().top + card.getBoundingClientRect().bottom) / 2;
+        card.style.transform = `translate(${(half - cHalf)}px, ${document.documentElement.scrollWidth}px) scale(1.5)`;
+    });
+
+    console.log();
 }
 
 async function moveBack(tickedCards) {
     tickedCards.forEach(card => card.classList.add('trans'));
-    tickedCards.forEach(card => card.classList.remove('new'));
-    await sleep(1500);
+    for (let card of tickedCards) {
+        card.style.transform = "translate(0px, 0px)";
+        await sleep(200);
+    };
+    await sleep(1000);
+    tickedCards.forEach(card => card.style.transform = "");
     tickedCards.forEach(card => card.classList.remove('trans'));
 }
 
