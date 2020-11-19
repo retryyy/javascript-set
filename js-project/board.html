@@ -24,63 +24,6 @@
 </head>
 <body>
     <div id="welcome">Welcome!</div>
-    <div id="menu">
-        <a href="#" class="close"></a>
-        <table>
-        <tr>
-            <td colspan="2">
-                NEW GAME SETTINGS
-            </td>
-        </tr>
-        <tr>
-            <td>
-                COMPETITIVE MODE
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div class="toggle_radio">
-                    <input type="radio" checked class="toggle_option" id="first_toggle" name="toggle_option"/>
-                    <input type="radio" class="toggle_option" id="second_toggle" name="toggle_option"/>
-                    <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option"/>
-                    <label for="first_toggle">
-                        <p>NO ASSIST</p>
-                    </label>
-                    <label for="second_toggle">
-                        <p>SHOW THE NUMBER OF SETS ON THE TABLE</p>
-                    </label>
-                    <label for="third_toggle">
-                        <p>SHOW A SET ON THE TABLE</p>
-                    </label>
-                    <div id="toggle_option_slider"></div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                NUMBER OF PLAYERS
-            </td>
-            <td>
-                <span class="stepper">
-                    <button>–</button>
-                    <input type="number" id="stepper" value="1" min="1" max="10" step="1" readonly>
-                    <button>+</button>
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button id="start">START GAME</button>
-            </td>
-        </tr>
-    </table>
-    </div>
     
     <div id="sidebar">
         <a id="new">New game</a>
@@ -94,69 +37,67 @@
 
     <input type="button" id="btnStart" value="Start" />
     
-
-    <div id="scoreboard">
-        <table>
-            <tr>
-                <th>#</th>
-                <th>Player</th>
-                <th>Score</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Jill</td>
-                <td>50</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td>Eve</td>
-                <td>94</td>
-            </tr>
-        </table>
-    </div>
-
     <div id="game">
-        <div id="container">
+        <div class="container">
+            <div id="scoreboard">
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Jill</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Eve</td>
+                        <td>94</td>
+                    </tr>
+                </table>
+            </div>
             <table id="layout">
                 <tr>
                     <td>
@@ -247,6 +188,63 @@
                     </td>
                 </tr>
             </table>
+            <div id="menu">
+                <a href="#" class="close"></a>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            NEW GAME SETTINGS
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            COMPETITIVE MODE
+                        </td>
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="toggle_radio">
+                                <input type="radio" checked class="toggle_option" id="first_toggle" name="toggle_option"/>
+                                <input type="radio" class="toggle_option" id="second_toggle" name="toggle_option"/>
+                                <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option"/>
+                                <label for="first_toggle">
+                                    <p>NO ASSIST</p>
+                                </label>
+                                <label for="second_toggle">
+                                    <p>SHOW THE NUMBER OF SETS ON THE TABLE</p>
+                                </label>
+                                <label for="third_toggle">
+                                    <p>SHOW A SET ON THE TABLE</p>
+                                </label>
+                                <div id="toggle_option_slider"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            NUMBER OF PLAYERS
+                        </td>
+                        <td>
+                            <span class="stepper">
+                                <button>–</button>
+                                <input type="number" id="stepper" value="1" min="1" max="10" step="1" readonly>
+                                <button>+</button>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button id="start">START GAME</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <script src="main.js"></script>

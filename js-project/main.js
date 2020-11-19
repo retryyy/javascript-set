@@ -40,6 +40,7 @@ async function loadPage() {
     sidebar.classList.add('opened');
     sidebarClick.firstElementChild.classList.add('click');
     
+    game.classList.toggle('hidden');
     menu.classList.remove('appear');
     logo.classList.add('appear');
     welcome.classList.add('disappear');
@@ -53,13 +54,13 @@ async function loadPage() {
 document.addEventListener("keydown", (event) => {
     if (event.keyCode === 83 && !sidebar.classList.contains('opened') && !menu.classList.contains('appear')) {
         scoreboard.classList.add('appear');
-        game.classList.remove('appear');
+        layout.classList.remove('appear');
     }
 });
 document.addEventListener("keyup", (event) => {
-    if (event.keyCode === 83 && !sidebar.classList.contains('opened')) {
+    if (event.keyCode === 83 && !sidebar.classList.contains('opened') && !menu.classList.contains('appear')) {
         scoreboard.classList.remove('appear');
-        game.classList.add('appear');
+        layout.classList.add('appear');
     }
 });
 
@@ -97,7 +98,7 @@ function moveOut(tickedCards) {
     
     tickedCards.forEach(card => {
         let cHalf = (card.getBoundingClientRect().top + card.getBoundingClientRect().bottom) / 2;
-        card.style.transform = `translate(${(half - cHalf)}px, ${document.documentElement.scrollWidth}px) scale(1.5)`;
+        card.style.transform = `translate(${(half - cHalf)}px, ${document.documentElement.scrollWidth + board.getBoundingClientRect().width / 3}px) scale(3)`;
     });
 
     console.log();
@@ -126,10 +127,10 @@ sidebarClick.addEventListener('click', () => {
 
         if (sidebar.classList.contains('opened')) {
             menu.classList.remove('appear');
-            game.classList.remove('appear');
+            layout.classList.remove('appear');
             logo.classList.add('appear');
         } else {
-            game.classList.add('appear');
+            layout.classList.add('appear');
             logo.classList.remove('appear');
         }
     }  
@@ -142,13 +143,13 @@ sidebar.querySelector('#new').addEventListener('click', () => {
     sidebar.classList.toggle('opened');
     sidebarClick.firstElementChild.classList.remove('click');
 
-    game.classList.remove('appear');
+    layout.classList.remove('appear');
     logo.classList.remove('appear');
 });
 
 start.addEventListener('click', () => {
     menu.classList.remove('appear');
-    game.classList.add('appear');
+    layout.classList.add('appear');
     gameOngoing = true;
 });
 

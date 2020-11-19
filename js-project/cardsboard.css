@@ -45,7 +45,7 @@
 }
 .card.trans {
     z-index: 5;
-    transition: all 1s ease-in-out;
+    transition: all 1s ease;
 }
 .card img {
     width: 100%;
