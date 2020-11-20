@@ -14,9 +14,15 @@ let sidebar = document.querySelector('#sidebar');
 let menu = document.querySelector('#menu');
 let menuClose = menu.querySelector('.close');
 let start = menu.querySelector('#start');
+let settings = menu.querySelector('#settings');
+let playerName = menu.querySelector('#player-name');
+let playerInput = playerName.querySelector('#player-name-input');
+let proceed = playerName.querySelector('#proceed');
+let stepper = document.querySelector('#stepper');
 let logo = document.querySelector('#logo');
 let game = document.querySelector('#game');
 let layout = document.querySelector('#layout');
+let players = layout.querySelector('#players');
 let board = game.querySelector('#cards-board');
 let cards = board.querySelectorAll('.card');
 let timer = game.querySelector('#timer');
@@ -44,6 +50,7 @@ async function loadPage() {
     menu.classList.remove('appear');
     logo.classList.add('appear');
     welcome.classList.add('disappear');
+    settings.classList.add('appear');
     
     for (elem of elements) {
         elem.classList.remove('hidden');
@@ -63,10 +70,6 @@ document.addEventListener("keyup", (event) => {
         layout.classList.add('appear');
     }
 });
-
-// scoreboard fill
-let players = 10;
-table.style.height = `calc(100% * ${players} / 10)`;
 
 // cards
 function tick() {
@@ -134,7 +137,7 @@ sidebarClick.addEventListener('click', () => {
             logo.classList.remove('appear');
         }
     }  
-})
+});
 
 // menu
 sidebar.querySelector('#new').addEventListener('click', () => {
@@ -148,9 +151,37 @@ sidebar.querySelector('#new').addEventListener('click', () => {
 });
 
 start.addEventListener('click', () => {
-    menu.classList.remove('appear');
-    layout.classList.add('appear');
-    gameOngoing = true;
+    playerName.querySelector('label span').innerText = 1;
+    table.style.height = `calc(100% * ${stepper.value} / 10)`;
+    players.style.height = `calc(100% * ${stepper.value} / 10)`;
+    players.innerHTML = "";
+    settings.classList.remove('appear');
+    playerName.classList.add('appear');
+});
+
+start.addEventListener('transitionend', () => {
+    playerInput.focus();
+});
+
+proceed.addEventListener('click', () => {
+    let e = playerName.querySelector('label span').innerText;
+    let value = parseInt(e);
+
+    let p = document.createElement('tr');
+    p.innerHTML = '<td>' + playerInput.value + '</td>';
+    p.setAttribute('id', playerInput.value);
+    players.appendChild(p);
+    
+    if (value == stepper.value) {
+        menu.classList.remove('appear');
+        layout.classList.add('appear');
+        settings.classList.add('appear');
+        playerName.classList.remove('appear');
+
+        gameOngoing = true;
+    }
+    value++;
+    playerName.querySelector('label span').innerText = value;
 });
 
 menuClose.addEventListener('click', () => {

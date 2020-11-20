@@ -101,37 +101,7 @@
             <table id="layout">
                 <tr>
                     <td>
-                        <table id="players">
-                            <tr>
-                                <td>Jill</td>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                            <tr>
-                                <td>Eve</td>
-                            </tr>
-                        </table>
+                        <table id="players"></table>
                     </td>
                     <td colspan="2">
                         <div id="cards-board">
@@ -178,7 +148,7 @@
                     <td id="assist_number">
                         <h1 class="assist">NUMBER OF SETS</h1>
                     </td>
-                    <td>
+                    <td id="bar">
                         <div id="background">
                             <div id="timer"></div>
                         </div>
@@ -190,7 +160,7 @@
             </table>
             <div id="menu">
                 <a href="#" class="close"></a>
-                <table>
+                <table id="settings">
                     <tr>
                         <td colspan="2">
                             NEW GAME SETTINGS
@@ -244,6 +214,13 @@
                         </td>
                     </tr>
                 </table>
+                <div id="player-name">
+                    <label for="pname">PLAYER <span>x</span></label><br><hr><br>
+                    <div id="input-container">
+                        <input type="text" id="player-name-input" name="pname" maxlength="10">
+                        <button id="proceed">PROCEED</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

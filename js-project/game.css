@@ -12,7 +12,7 @@
     height: 100%;
     color: white;
     border-collapse: collapse;
-    transform: translate(calc(15vw), calc(5vh)) scale(.2);
+    transform: scale(.2) translate(calc(15vw), calc(5vh));
     transition: all .5s ease;
 }
 
@@ -21,10 +21,10 @@
     opacity: 1;
 }
 
-#game #layout tr:nth-child(2) {
+#game #layout > tbody > tr:nth-child(2) {
     height: 10%;
 }
-#game #layout td:nth-child(2) {
+#layout > tbody > tr:nth-child(2) > td:nth-child(2) {
     width: 40%;
 }
 

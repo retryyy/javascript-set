@@ -6,27 +6,32 @@
     height: 95%;
     width: 100%;
     transform: scale(.1);
-    transition: all .5s ease;
+    transition: all .5s ease-in-out;
     z-index: 10;
+    display: flex;
+    justify-content: center;
 }
 #menu.appear {
     transform: scale(1);
     opacity: .9;
 }
 
-#menu td {
+#menu #settings td {
     width: 50%;
     margin: auto;
 }
-#menu tr:first-child {
+#menu #settings tr:first-child {
     font-size: 300%;
     background: rgba(255, 255, 255, 0.1);
 }
-#menu tr {
+#menu #settings tr {
     border-top: 1px solid white;
     transition: .3s ease-in-out;
 }
-#menu table {
+#menu #settings {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
     width: 90%;
     border-collapse: collapse;
     text-align: center;
@@ -36,9 +41,14 @@
     font-size: x-large;
     font-weight: bold;
     color: white;
+    transition: all .5s ease;
+}
+#menu #settings.appear {
+    visibility: visible;
+    opacity: 1;
 }
 
-#menu #start {
+#menu #settings #start {
 	background-color: rgba(255, 255, 255, 0.4);
 	border: none;
 	box-shadow: 3px 3px 5px rgba(0, 0, 0, .25);
@@ -47,8 +57,65 @@
     font-size: 100%;
     transition: 0.3s ease-in-out;
 }
-#menu #start:hover {
+#menu #settings #start:hover {
     background-color:rgba(255, 255, 255, 0.7);
 	cursor: pointer;
     color: white;
+}
+
+#menu #player-name {
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    font-size: x-large;
+    font-weight: bold;
+    color: white;
+    opacity: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    visibility: hidden;
+    transform: scale(.7);
+}
+#menu #player-name.appear {
+    opacity: 1;
+    transform: scale(1);
+    transition: all .5s ease;
+    visibility: visible;
+}
+#menu #player-name label {
+    font-size: 500%;
+    opacity: .8;
+}
+#menu #input-container {
+    display: flex;
+    height: 15%;
+    width: 100%;
+    justify-content: center;
+}
+#menu #player-name input[type=text] {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.3);
+	border: none;
+    width: 60%;
+    height: 100%;
+    font-size: 250%;
+    color: transparent;
+    text-shadow: 0 0 0 white;
+}
+
+#menu #player-name button {
+	background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 20%;
+    font-size: 100%;
+}
+#menu #player-name button:hover {
+	cursor: pointer;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.8);
 }
