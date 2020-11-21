@@ -12,7 +12,7 @@
     height: 100%;
     color: white;
     border-collapse: collapse;
-    transform: scale(.2) translate(calc(15vw), calc(5vh));
+    transform: translate(calc(15vw), calc(5vh)) scale(.2);
     transition: all .5s ease;
 }
 

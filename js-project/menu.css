@@ -5,15 +5,17 @@
     position: absolute;
     height: 95%;
     width: 100%;
-    transform: scale(.1);
-    transition: all .5s ease-in-out;
+    transform: scale(.3);
+    transition: all .5s ease;
     z-index: 10;
     display: flex;
     justify-content: center;
+    visibility: hidden;
 }
 #menu.appear {
     transform: scale(1);
     opacity: .9;
+    visibility: visible;
 }
 
 #menu #settings td {

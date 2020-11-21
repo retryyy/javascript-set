@@ -5,7 +5,7 @@
     position: absolute;
     height: 95%;
     width: 100%;
-    transform: scale(.4);
+    transform: translateY(calc(-50vh)) scale(.4);
     transition: all .5s ease;
 }
 

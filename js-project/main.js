@@ -72,11 +72,6 @@ document.addEventListener("keyup", (event) => {
 });
 
 // cards
-function tick() {
-    this.classList.toggle('active');
-    exchange();
-}
-
 async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
@@ -118,7 +113,10 @@ async function moveBack(tickedCards) {
     tickedCards.forEach(card => card.classList.remove('trans'));
 }
 
-cards.forEach(card => card.addEventListener('click', tick));
+cards.forEach(card => card.addEventListener('click', () => {
+    card.classList.toggle('active');
+    exchange();
+}));
 
 // sidebar
 sidebarClick.addEventListener('click', () => {
@@ -163,15 +161,22 @@ start.addEventListener('transitionend', () => {
     playerInput.focus();
 });
 
-proceed.addEventListener('click', () => {
-    let e = playerName.querySelector('label span').innerText;
-    let value = parseInt(e);
+players.addEventListener('click', (item) => {
+    item.path[1].classList.toggle('active');
+});
 
+proceed.addEventListener('click', () => {
+    if (!isValidInput(playerInput.value)) return;
+    
     let p = document.createElement('tr');
     p.innerHTML = '<td>' + playerInput.value + '</td>';
     p.setAttribute('id', playerInput.value);
     players.appendChild(p);
-    
+    playerInput.value = "";
+
+    let e = playerName.querySelector('label span').innerText;
+    let value = parseInt(e);
+
     if (value == stepper.value) {
         menu.classList.remove('appear');
         layout.classList.add('appear');
@@ -179,18 +184,35 @@ proceed.addEventListener('click', () => {
         playerName.classList.remove('appear');
 
         gameOngoing = true;
+        return;
     }
     value++;
     playerName.querySelector('label span').innerText = value;
 });
 
-menuClose.addEventListener('click', () => {
+function isValidInput(input) {
+    if (input.length <= 0) return false;
+    let playersData = players.querySelectorAll('td');
+    for (player of playersData) {
+        if (input == player.innerText) return false;
+    }
+    return true;
+}
+
+menuClose.addEventListener('click', async () => {
     logo.classList.add('appear');
 
+    
     menu.classList.remove('appear');
     sidebarClick.classList.add('opened');
     sidebar.classList.add('opened');
     sidebarClick.firstElementChild.classList.add('click');
+
+    await sleep(500);
+
+    playerInput.value = "";
+    settings.classList.add('appear');
+    playerName.classList.remove('appear');
 });
 
 // spinner
