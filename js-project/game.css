@@ -5,7 +5,7 @@
     transform: translate(calc(15vw), calc(5vh));
 }
 
-#game #layout {
+#game #layout  {
     position: absolute;
     opacity: 0;
     width: 100%;
@@ -16,6 +16,10 @@
     transition: all .5s ease;
 }
 
+ #layout,  #layout td,  #layout th {
+    border: 5px solid red;
+}
+
 #game #layout.appear {
     transform: scale(1);
     opacity: 1;
@@ -24,7 +28,7 @@
 #game #layout > tbody > tr:nth-child(2) {
     height: 10%;
 }
-#layout > tbody > tr:nth-child(2) > td:nth-child(2) {
+#game #layout > tbody > tr:nth-child(2) > td:nth-child(2) {
     width: 40%;
 }
 
@@ -32,7 +36,7 @@
     position: relative;
     width: 100%;
     padding-bottom: 63%;
-    min-height: 768px;
+    min-height: 655px;
     min-width: 1024px;
 }
 

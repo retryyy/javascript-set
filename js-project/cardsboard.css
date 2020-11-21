@@ -1,8 +1,8 @@
 #cards-board {
     position: relative;
     margin: auto;
-    width: 80%;
-    height: 100%;
+    width: 87%;
+    height: 95%;
 
     display: flex;
     flex-wrap: wrap;
@@ -20,16 +20,34 @@
 #cards-board.unlock {
     pointer-events: auto;
 }
+#cards-board.fifteen {
+    height: 90%;
+}
+#cards-board.eighteen {
+    height: 85%;
+}
+#cards-board.twenty-one {
+    height: 80%;
+}
 
 .card {
-    width: calc(24% - 5px);
-    height: calc(33.33% - 15px);
+    width: 23%;
+    height: 31%;
     position: relative;
-    margin: 5px;
+    margin: auto;
     background: transparent;
     border-radius: 8px;
     transform: scale(1);
     transition: transform .3s;
+}
+.card.fifteen {
+    width: 19%;
+}
+.card.eighteen {
+    width: 15%;
+}
+.card.twenty-one {
+    width: 13%;
 }
 .card.active {
     background: orange;
