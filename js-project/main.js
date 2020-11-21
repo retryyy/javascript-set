@@ -26,11 +26,13 @@ let players = layout.querySelector('#players');
 let board = game.querySelector('#cards-board');
 let cards = board.querySelectorAll('.card');
 let timer = game.querySelector('#timer');
-let scoreboard = document.querySelector('#scoreboard');
-let table = scoreboard.querySelector("table");
 
 let gameOngoing = false;
 let choosing = false;
+let activePlayer;
+let nrOfPlayers = 1;
+let nrOfInstantiatedPlayers = 0;
+let playersInfo = [];
 
 // load
 loadPage();
@@ -51,26 +53,13 @@ async function loadPage() {
     menu.classList.remove('appear');
     logo.classList.add('appear');
     welcome.classList.add('disappear');
+    resetMenu();
     settings.classList.add('appear');
     
     for (elem of elements) {
         elem.classList.remove('hidden');
     }
 }
-
-// scoreboard visibility
-document.addEventListener("keydown", (event) => {
-    if (event.keyCode === 83 && !sidebar.classList.contains('opened') && !menu.classList.contains('appear')) {
-        scoreboard.classList.add('appear');
-        layout.classList.remove('appear');
-    }
-});
-document.addEventListener("keyup", (event) => {
-    if (event.keyCode === 83 && !sidebar.classList.contains('opened') && !menu.classList.contains('appear')) {
-        scoreboard.classList.remove('appear');
-        layout.classList.add('appear');
-    }
-});
 
 // timer ///////////////////////////////////////////////////////////////////////////////
 let acted = true;
@@ -93,16 +82,19 @@ function refreshTimer() {
 // game
 players.addEventListener('click', (item) => {
     if (!choosing) {
-        players.style.pointerEvents = 'none'; // disable players
-        board.classList.add('unlock'); // enable board
+        players.querySelectorAll('div').forEach(plate => {
+            plate.classList.remove('lock');
+        });
+        board.classList.add('unlock');
 
         choosing = true;
         acted = false;
         setTimeout(countDown, 0);
 
-        let tr = item.target.parentElement;
-        tr.classList.toggle('active');
-        console.log(tr.rowIndex);
+        let td = item.target.parentElement;
+        td.classList.toggle('active');
+
+        activePlayer = td.parentElement.rowIndex;
     }
 });
 
@@ -118,6 +110,8 @@ async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
+        console.log(activePlayer);
+        playersInfo[activePlayer].score += 1;
         acted = true;
         
         await sleep(1000);
@@ -128,17 +122,20 @@ async function exchange() {
         await moveBack(tickedCards);
 
         timer.classList.add('load');
-        Array.from(players.querySelectorAll('tr')).forEach(player => {
-            player.classList.remove('active');
-        });
+        Array.from(players.querySelectorAll('tr')).forEach(player => player.classList.remove('active'));
         sec = 10;
         refreshTimer();
+        refreshPlayersTable()
         timer.classList.remove('last-secs')
 
         await sleep(1000);
 
         timer.classList.remove('load');
-        players.style.pointerEvents = 'auto';
+        
+        players.querySelectorAll('div').forEach(plate => {
+            plate.classList.remove('lock');
+        });
+
         choosing = false;
     }
 }
@@ -155,8 +152,6 @@ function moveOut(tickedCards) {
         let cHalf = (card.getBoundingClientRect().top + card.getBoundingClientRect().bottom) / 2;
         card.style.transform = `translate(${(half - cHalf)}px, ${document.documentElement.scrollWidth + board.getBoundingClientRect().width / 3}px) scale(3)`;
     });
-
-    console.log();
 }
 
 async function moveBack(tickedCards) {
@@ -191,6 +186,7 @@ sidebarClick.addEventListener('click', () => {
     }  
 });
 
+
 // menu
 sidebar.querySelector('#new').addEventListener('click', () => {
     menu.classList.toggle('appear');
@@ -202,10 +198,11 @@ sidebar.querySelector('#new').addEventListener('click', () => {
     logo.classList.remove('appear');
 });
 
+// start
 start.addEventListener('click', () => {
+    nrOfPlayers = stepper.value;
     playerName.querySelector('label span').innerText = 1;
-    table.style.height = `calc(100% * ${stepper.value} / 10)`;
-    players.style.height = `calc(100% * ${stepper.value} / 10)`;
+    players.style.height = `calc(100% * ${nrOfPlayers} / 10)`;
     players.innerHTML = "";
     settings.classList.remove('appear');
     playerName.classList.add('appear');
@@ -215,36 +212,50 @@ start.addEventListener('transitionend', () => {
     playerInput.focus();
 });
 
+//proceed
 proceed.addEventListener('click', () => {
-    if (!isValidInput(playerInput.value)) return;
-    
-    let p = document.createElement('tr');
-    p.innerHTML = '<td>' + playerInput.value + '</td>';
-    p.setAttribute('id', playerInput.value);
-    players.appendChild(p);
+    let name = playerInput.value;
+    if (!isValidInput(name)) return;
+
+    addPlayer(name);
     playerInput.value = "";
+    nrOfInstantiatedPlayers++;
 
-    let e = playerName.querySelector('label span').innerText;
-    let value = parseInt(e);
+    if (nrOfInstantiatedPlayers == nrOfPlayers) {
+        refreshPlayersTable();
 
-    if (value == stepper.value) {
         menu.classList.remove('appear');
         layout.classList.add('appear');
+        resetMenu();
         settings.classList.add('appear');
         playerName.classList.remove('appear');
 
         gameOngoing = true;
         return;
     }
-    value++;
-    playerName.querySelector('label span').innerText = value;
-});
+    playerName.querySelector('label span').innerText = nrOfInstantiatedPlayers + 1;
+})
+
+function addPlayer(name) {
+    playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
+}
+
+function refreshPlayersTable() {
+    players.innerHTML = "";
+    playersInfo.sort((a, b) => b.score - a.score);
+
+    for (player of playersInfo) {
+        let p = document.createElement('tr');
+        p.innerHTML = '<td><div>' + player.name + '</div><div>'+ player.score + '</div></td>';
+        p.setAttribute('id', player.name);
+        players.appendChild(p);
+    }
+}
 
 function isValidInput(input) {
     if (input.length <= 0) return false;
-    let playersData = players.querySelectorAll('td');
-    for (player of playersData) {
-        if (input == player.innerText) return false;
+    for (player of playersInfo) {
+        if (input == player.name) return false;
     }
     return true;
 }
@@ -252,7 +263,6 @@ function isValidInput(input) {
 menuClose.addEventListener('click', async () => {
     logo.classList.add('appear');
 
-    
     menu.classList.remove('appear');
     sidebarClick.classList.add('opened');
     sidebar.classList.add('opened');
@@ -260,10 +270,17 @@ menuClose.addEventListener('click', async () => {
 
     await sleep(500);
 
-    playerInput.value = "";
+    resetMenu();
     settings.classList.add('appear');
     playerName.classList.remove('appear');
-});
+})
+
+function resetMenu() {
+    stepper.value = 1;
+    nrOfPlayers = 1;
+    nrOfInstantiatedPlayers = 0;
+    playerInput.value = "";
+}
 
 // spinner
 var inc = document.getElementsByClassName("stepper");
@@ -287,4 +304,3 @@ function stepperInput(id, s, m) {
         el.value = parseInt(el.value) + s;
     }
 }
-

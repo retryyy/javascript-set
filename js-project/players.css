@@ -2,24 +2,46 @@
     position: relative;
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
 #players td {
+    width: 90%;
+    height: 100%;
+    display: flex;
     border: 2px solid rgba(255, 255, 255, .5);
     background-color: rgba(255, 255, 255, .2);
     border-radius: 4px;
-    text-align: center;
-    font-size: 150%;
+    font-size: 200%;
     font-weight: bold;
     box-shadow: 8px 8px 8px 8px rgba(0, 0, 0, .4);
+    pointer-events: none;
 }
 #players td:hover {
     cursor: pointer;
+}
+#players td div {
+    pointer-events: all;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 8px black;
+}
+#players td div:first-child {
+    width: 70%;
+}
+#players td div:nth-child(2) {
+    width: 30%;
+    color: rgb(230, 230, 0);
+}
+#players td div.lock {
+    pointer-events: none;
 }
 
 #players tr {
     transition: all .5s;
 }
-#players tr.active {
-    background-color: orange;
+#players td.active {
+    background-color: rgba(255, 166, 0, .6);
 }
