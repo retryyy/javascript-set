@@ -64,15 +64,23 @@ async function loadPage() {
 // timer ///////////////////////////////////////////////////////////////////////////////
 let acted = true;
 let sec = 10;
-function countDown() {
+async function countDown() {
 	refreshTimer();
 	sec -= .01;
-	if (sec >= 0 && !acted) {
-        if (sec < 4) {
-            timer.classList.add('last-secs');
+	if (sec >= 0) {
+        if (!acted) {
+            if (sec < 4) {
+                timer.classList.add('last-secs');
+            }
+            setTimeout(countDown, 10);
         }
-		setTimeout(countDown, 10);
-	}
+	} else {
+        cards.forEach(card => card.classList.remove('active'));
+        board.classList.remove('unlock');
+        playersInfo[activePlayer].score -= 1;
+        
+        startNewRound();
+    }
 }
 
 function refreshTimer() {
@@ -110,7 +118,6 @@ async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
-        console.log(activePlayer);
         playersInfo[activePlayer].score += 1;
         acted = true;
         
@@ -121,23 +128,27 @@ async function exchange() {
         await sleep(1000);
         await moveBack(tickedCards);
 
-        timer.classList.add('load');
-        Array.from(players.querySelectorAll('tr')).forEach(player => player.classList.remove('active'));
-        sec = 10;
-        refreshTimer();
-        refreshPlayersTable()
-        timer.classList.remove('last-secs')
-
-        await sleep(1000);
-
-        timer.classList.remove('load');
-        
-        players.querySelectorAll('div').forEach(plate => {
-            plate.classList.remove('lock');
-        });
-
-        choosing = false;
+        startNewRound();
     }
+}
+
+async function startNewRound() {
+    timer.classList.add('load');
+    Array.from(players.querySelectorAll('tr')).forEach(player => player.classList.remove('active'));
+    sec = 10;
+    refreshTimer();
+    refreshPlayersTable()
+    timer.classList.remove('last-secs')
+
+    await sleep(1000);
+
+    timer.classList.remove('load');
+    
+    players.querySelectorAll('div').forEach(plate => {
+        plate.classList.remove('lock');
+    });
+
+    choosing = false;
 }
 
 function moveOut(tickedCards) {

@@ -17,9 +17,7 @@
     box-shadow: 8px 8px 8px 8px rgba(0, 0, 0, .4);
     pointer-events: none;
 }
-#players td:hover {
-    cursor: pointer;
-}
+
 #players td div {
     pointer-events: all;
     height: 100%;
@@ -37,6 +35,9 @@
 }
 #players td div.lock {
     pointer-events: none;
+}
+#players td div:hover {
+    cursor: pointer;
 }
 
 #players tr {
