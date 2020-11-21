@@ -13,11 +13,13 @@
     font-weight: bold;
     box-shadow: 8px 8px 8px 8px rgba(0, 0, 0, .4);
 }
-
 #players td:hover {
     cursor: pointer;
-    background-color: rgba(255, 255, 255, .4);
+}
+
+#players tr {
+    transition: all .5s;
 }
 #players tr.active {
-    background: orange;
+    background-color: orange;
 }

@@ -14,8 +14,10 @@
     background-color: rgba(255, 255, 255, .5);
 }
 
-#btnStart {
-    position: absolute;
-    transform: translate(500px);
+#timer.load {
+    transition: 1s ease;
 }
-
+#timer.last-secs {
+    background-color: rgba(255, 0, 0, 0.5);
+    transition: background-color 1s ease;
+}

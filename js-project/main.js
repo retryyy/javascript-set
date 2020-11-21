@@ -30,6 +30,7 @@ let scoreboard = document.querySelector('#scoreboard');
 let table = scoreboard.querySelector("table");
 
 let gameOngoing = false;
+let choosing = false;
 
 // load
 loadPage();
@@ -71,18 +72,74 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
+// timer ///////////////////////////////////////////////////////////////////////////////
+let acted = true;
+let sec = 10;
+function countDown() {
+	refreshTimer();
+	sec -= .01;
+	if (sec >= 0 && !acted) {
+        if (sec < 4) {
+            timer.classList.add('last-secs');
+        }
+		setTimeout(countDown, 10);
+	}
+}
+
+function refreshTimer() {
+    timer.style.width = (sec * 100 / 10) + "%";
+}
+
+// game
+players.addEventListener('click', (item) => {
+    if (!choosing) {
+        players.style.pointerEvents = 'none'; // disable players
+        board.classList.add('unlock'); // enable board
+
+        choosing = true;
+        acted = false;
+        setTimeout(countDown, 0);
+
+        let tr = item.target.parentElement;
+        tr.classList.toggle('active');
+        console.log(tr.rowIndex);
+    }
+});
+
 // cards
+cards.forEach(card => card.addEventListener('click', () => {
+    if (choosing) {
+        card.classList.toggle('active');
+        exchange();
+    }
+}));
+
 async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
-        board.classList.add('lock');
+        board.classList.remove('unlock');
+        acted = true;
+        
         await sleep(1000);
         tickedCards.forEach(card => card.classList.add('fade'));
         await sleep(1000);
         await moveOut(tickedCards);
         await sleep(1000);
         await moveBack(tickedCards);
-        board.classList.remove('lock');
+
+        timer.classList.add('load');
+        Array.from(players.querySelectorAll('tr')).forEach(player => {
+            player.classList.remove('active');
+        });
+        sec = 10;
+        refreshTimer();
+        timer.classList.remove('last-secs')
+
+        await sleep(1000);
+
+        timer.classList.remove('load');
+        players.style.pointerEvents = 'auto';
+        choosing = false;
     }
 }
 
@@ -113,10 +170,7 @@ async function moveBack(tickedCards) {
     tickedCards.forEach(card => card.classList.remove('trans'));
 }
 
-cards.forEach(card => card.addEventListener('click', () => {
-    card.classList.toggle('active');
-    exchange();
-}));
+////////////////////////////////////////////////////////////////////////////////////////
 
 // sidebar
 sidebarClick.addEventListener('click', () => {
@@ -159,10 +213,6 @@ start.addEventListener('click', () => {
 
 start.addEventListener('transitionend', () => {
     playerInput.focus();
-});
-
-players.addEventListener('click', (item) => {
-    item.path[1].classList.toggle('active');
 });
 
 proceed.addEventListener('click', () => {
@@ -238,15 +288,3 @@ function stepperInput(id, s, m) {
     }
 }
 
-// timer
-document.querySelector('#btnStart').addEventListener('click', countDown, false);
-
-let sec = 10;
-const maxSec = 10;
-function countDown() {
-	timer.style.width = (sec * 100 / maxSec) + "%";
-	sec--;
-	if (sec >= 0) {
-		setTimeout(countDown, 1000);
-	}
-}
