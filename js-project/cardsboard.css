@@ -12,15 +12,20 @@
     transition: all .5s ease-in-out;
     padding: 1%;
 }
+#board.transition-zero {
+    transition: all 0s;
+}
+#board.shrink {
+    width: 100.5%;
+}
 
 #cards-board {
-    overflow: hidden;
     width: 87%;
     height: 100%;
     margin: auto;
     position: relative;
 
-    transition: all .5s ease-in-out;
+    transition: all .5s;
     transform: rotate(90deg);
 
     border-radius: 8px;
@@ -51,8 +56,9 @@
     background: transparent;
     border-radius: 8px;
     transform: scale(1);
-    transition: transform .5s;
+    transition: transform .5s, width .5s;
 }
+
 .card.fifteen {
     width: 19%;
 }

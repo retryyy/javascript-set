@@ -446,18 +446,31 @@ document.querySelector('#btnStart').addEventListener('click', async () => {
     
     await sleep(500);
 
-    board.querySelector('#board').style.width = '116.5%';
+    board.querySelector('#board').classList.add('shrink');
+    
+    
+    
     board.classList.remove('twenty-one');
     board.classList.add('eighteen');
-    await sleep(500);
-    board.querySelector('#board').style.transition = '0s';
-    board.querySelector('#board').style.width = '100%';
-    
+
     cards.forEach(card => {
         card.classList.remove('twenty-one');
         card.classList.add('eighteen');
     })
+    cardA.style.width = '0%';
+    cardB.style.width = '0%';
+    cardC.style.width = '0%';
+
+    await sleep(500);
+    
+    board.querySelector('#board').classList.add('transition-zero');
+    board.querySelector('#board').classList.remove('shrink');
+    //
+    
     cardA.remove();
     cardB.remove();
     cardC.remove();
+
+    await sleep(500);
+    board.querySelector('#board').classList.remove('transition-zero');
 });
