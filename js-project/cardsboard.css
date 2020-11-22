@@ -87,7 +87,9 @@
 .card.hide {
     opacity: 0;
 }
-
+.card.squeeze {
+    width: 0%;
+}
 .card img {
     width: 100%;
     height: 100%;

@@ -35,7 +35,7 @@ let nrOfPlayers = 1;
 let nrOfInstantiatedPlayers = 0;
 let playersInfo = [];
 
-let mode = "twenty-one";
+let mode = "";
 
 // load
 loadPage();
@@ -54,7 +54,7 @@ async function loadPage() {
     
     game.classList.toggle('hidden');
     menu.classList.remove('appear');
-    layout.classList.add('appear');
+    layout.classList.remove('appear');
     logo.classList.add('appear');
     welcome.classList.add('disappear');
     resetMenu();
@@ -111,12 +111,18 @@ players.addEventListener('click', (item) => {
 });
 
 // cards
-cards.forEach(card => card.addEventListener('click', () => {
+addCardEventListener(cards);
+function addCardEventListener(cs) {
+    cs.forEach(card => card.removeEventListener('click', cardEvent));
+    cs.forEach(card => card.addEventListener('click', cardEvent));
+}
+
+function cardEvent() {
     if (choosing) {
-        card.classList.toggle('active');
+        this.classList.toggle('active');
         exchange();
     }
-}));
+}
 
 async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
@@ -327,8 +333,6 @@ async function checkSet(tickedCards) {
         return true;
     }
 
-    console.log('lel');
-
     await sleep(1000);
     let fadings;
     let oldMode = mode;
@@ -356,7 +360,7 @@ async function checkSet(tickedCards) {
 
     await sleep(500);
     needAnimFrom.forEach(needFrom => cards[needFrom].style.opacity = 0);
-    board.querySelector('#board').classList.add('shrink');
+    boardContainer.classList.add('shrink');
     board.classList.remove(oldMode);
     if (mode != "") board.classList.add(mode);
     cards.forEach(card => {
@@ -390,185 +394,54 @@ async function animation(from, to) {
     cardFrom.style.transform = `translate(${xB}px, ${yB}px)`;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function animation2() {
-    let cardA = cards[6]; // eighteen
-    cardA.style.opacity = 0;
-    let cardB = cards[13];
-    let cardC = cards[20];
-
-    let cardX = cards[1];
-    let cardY = cards[10];
-
-    cardB.firstElementChild.src = "icons/2HrS.svg";
-    cardC.firstElementChild.src = "icons/2HrS.svg";
-    cardX.firstElementChild.src = "icons/2HrS.svg";
-    cardY.firstElementChild.src = "icons/2HrS.svg";
-    cardX.style.opacity = 0;
-    cardY.style.opacity = 0;
-
-    await sleep(1000);
-    let yB = cardB.getBoundingClientRect().right - cardX.getBoundingClientRect().right;
-    let xB = cardX.getBoundingClientRect().top - cardB.getBoundingClientRect().top;
-    cardB.style.transform = `translate(${xB}px, ${yB}px)`;
-
-    let yC = cardC.getBoundingClientRect().right - cardY.getBoundingClientRect().right;
-    let xC = cardY.getBoundingClientRect().top - cardC.getBoundingClientRect().top;
-    cardC.style.transform = `translate(${xC}px, ${yC}px)`;
-    
-    await sleep(1000);
-
-    cardX.style.opacity = 1;
-    cardB.style.opacity = 0;
-    cardY.style.opacity = 1;
-    cardC.style.opacity = 0;
-    
-    await sleep(500);
-
-    board.querySelector('#board').classList.add('shrink');
-    
-    
-    
-    board.classList.remove('twenty-one');
-    board.classList.add('eighteen');
-
-    cards.forEach(card => {
-        card.classList.remove('twenty-one');
-        card.classList.add('eighteen');
-    })
-    cardA.style.width = '0%';
-    cardB.style.width = '0%';
-    cardC.style.width = '0%';
-
-    await sleep(500);
-    
-    board.querySelector('#board').classList.add('transition-zero');
-    board.querySelector('#board').classList.remove('shrink');
-    //
-    
-    cardA.remove();
-    cardB.remove();
-    cardC.remove();
-
-    await sleep(500);
-    board.querySelector('#board').classList.remove('transition-zero');
-}
-
 document.querySelector('#btnStart').addEventListener('click', async () => {
-    /*let cardA = cards[4]; //fifteen
-    cardA.style.opacity = 0;
-    let cardB = cards[9];
-    let cardC = cards[14];
+    let oldMode = mode;
+    if (mode == '') {
+        fadings = [4, 9, 14];
+        mode = 'fifteen'
+    } else if (mode == 'fifteen') {
+        fadings = [5, 11, 17];
+        mode = 'eighteen';
+    } else if (mode == 'eighteen') {
+        fadings = [6, 13, 20];
+        mode = 'twenty-one'
+    }
 
-    let cardX = cards[1];
-    let cardY = cards[11];
+    if (oldMode != "twenty-one") {
+        boardContainer.classList.add('transition-zero');
+        boardContainer.classList.add('shrink');
 
-    cardB.firstElementChild.src = "icons/2HrS.svg";
-    cardC.firstElementChild.src = "icons/2HrS.svg";
-    cardX.firstElementChild.src = "icons/2HrS.svg";
-    cardY.firstElementChild.src = "icons/2HrS.svg";
-    cardX.style.opacity = 0;
-    cardY.style.opacity = 0;
+        for (fade of fadings) {
+            let newCard = document.createElement('div');
+            newCard.setAttribute('class', 'card');
+            let newCardImg = document.createElement('img');
+            newCardImg.setAttribute('src', 'icons/2HrS.svg');
+            newCard.appendChild(newCardImg);
 
-    await sleep(1000);
-    let yB = cardB.getBoundingClientRect().right - cardX.getBoundingClientRect().right;
-    let xB = cardX.getBoundingClientRect().top - cardB.getBoundingClientRect().top;
-    cardB.style.transform = `translate(${xB}px, ${yB}px)`;
+            newCard.classList.add('squeeze');
+            newCard.classList.add('fade');
+            boardContainer.insertBefore(newCard, boardContainer.children[fade]);
+        }
 
-    let yC = cardC.getBoundingClientRect().right - cardY.getBoundingClientRect().right;
-    let xC = cardY.getBoundingClientRect().top - cardC.getBoundingClientRect().top;
-    cardC.style.transform = `translate(${xC}px, ${yC}px)`;
-    
-    await sleep(1000);
+        await sleep(500);
+        cards = board.querySelectorAll('.card');
+        addCardEventListener(cards);
+        cards.forEach(card => {
+            if (oldMode != '') card.classList.remove(oldMode);
+            card.classList.add(mode);
+        })
 
-    cardX.style.opacity = 1;
-    cardB.style.opacity = 0;
-    cardY.style.opacity = 1;
-    cardC.style.opacity = 0;
-    
-    await sleep(500);
+        if (oldMode != "") board.classList.remove(oldMode);
+        board.classList.add(mode);
+        
+        boardContainer.classList.remove('shrink');
+        fadings.forEach(fade => cards[fade].classList.remove('squeeze'));
+        let newCards = [cards[fadings[0]], cards[fadings[1]], cards[fadings[2]]];
 
-    board.querySelector('#board').style.width = '124.2%';
-    board.classList.remove('fifteen');
-    await sleep(500);
-    board.querySelector('#board').style.transition = '0s';
-    board.querySelector('#board').style.width = '100%';
-    
-    cards.forEach(card => {
-        card.classList.remove('fifteen');
-        card.classList.add('fifteen-after');
-    })
-    cardA.remove();
-    cardB.remove();
-    cardC.remove();*/
-
-    /*let cardA = cards[5]; // eighteen
-    cardA.style.opacity = 0;
-    let cardB = cards[11];
-    let cardC = cards[17];
-
-    let cardX = cards[1];
-    let cardY = cards[10];
-
-    cardB.firstElementChild.src = "icons/2HrS.svg";
-    cardC.firstElementChild.src = "icons/2HrS.svg";
-    cardX.firstElementChild.src = "icons/2HrS.svg";
-    cardY.firstElementChild.src = "icons/2HrS.svg";
-    cardX.style.opacity = 0;
-    cardY.style.opacity = 0;
-
-    await sleep(1000);
-    let yB = cardB.getBoundingClientRect().right - cardX.getBoundingClientRect().right;
-    let xB = cardX.getBoundingClientRect().top - cardB.getBoundingClientRect().top;
-    cardB.style.transform = `translate(${xB}px, ${yB}px)`;
-
-    let yC = cardC.getBoundingClientRect().right - cardY.getBoundingClientRect().right;
-    let xC = cardY.getBoundingClientRect().top - cardC.getBoundingClientRect().top;
-    cardC.style.transform = `translate(${xC}px, ${yC}px)`;
-    
-    await sleep(1000);
-
-    cardX.style.opacity = 1;
-    cardB.style.opacity = 0;
-    cardY.style.opacity = 1;
-    cardC.style.opacity = 0;
-    
-    await sleep(500);
-
-    board.querySelector('#board').style.width = '119.3%';
-    board.classList.remove('eighteen');
-    board.classList.add('fifteen');
-    await sleep(500);
-    board.querySelector('#board').style.transition = '0s';
-    board.querySelector('#board').style.width = '100%';
-    
-    cards.forEach(card => {
-        card.classList.remove('eighteen');
-        card.classList.add('fifteen');
-    })
-    cardA.remove();
-    cardB.remove();
-    cardC.remove();*/
-
-    
+        await moveOut(newCards);
+        await sleep(500);
+        await moveBack(newCards);
+        
+        boardContainer.classList.remove('transition-zero');
+    }
 });

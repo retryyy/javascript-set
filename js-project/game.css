@@ -15,11 +15,6 @@
     transform: translate(calc(15vw), calc(5vh)) scale(.2);
     transition: all .5s ease;
 }
-
- #layout,  #layout td,  #layout th {
-    border: 5px solid red;
-}
-
 #game #layout.appear {
     transform: scale(1);
     opacity: 1;
