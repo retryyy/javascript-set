@@ -111,10 +111,10 @@ players.addEventListener('click', (item) => {
 });
 
 // cards
-addCardEventListener(cards);
-function addCardEventListener(cs) {
-    cs.forEach(card => card.removeEventListener('click', cardEvent));
-    cs.forEach(card => card.addEventListener('click', cardEvent));
+addCardEventListener();
+function addCardEventListener() {
+    cards.forEach(card => card.removeEventListener('click', cardEvent));
+    cards.forEach(card => card.addEventListener('click', cardEvent));
 }
 
 function cardEvent() {
@@ -127,12 +127,13 @@ function cardEvent() {
 async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
+        board.classList.remove('unlock');
+        choosing = false;
         cards = board.querySelectorAll('.card');
+
         await checkSet(tickedCards);
         
-        board.classList.remove('unlock');
         playersInfo[activePlayer].score += 1;
-
         startNewRound();
     }
 }
@@ -152,8 +153,6 @@ async function startNewRound() {
     players.querySelectorAll('div').forEach(plate => {
         plate.classList.remove('lock');
     });
-
-    choosing = false;
 }
 
 async function moveOut(tickedCards) {
@@ -350,9 +349,8 @@ async function checkSet(tickedCards) {
     let needAnimTo = removed.filter(card => !fadings.includes(card));
     let needAnimFrom = fadings.filter(card => !removed.includes(card));
         
-    for (let i = 0; i < needAnimFrom.length; i++) animation(needAnimFrom[i], needAnimTo[i]);
+    await animation(needAnimFrom, needAnimTo);
 
-    await sleep(2000);
     needAnimTo.forEach(needTo => {
         cards[needTo].classList.remove('fade');
         cards[needTo].classList.remove('hide');
@@ -381,17 +379,22 @@ async function checkSet(tickedCards) {
 }
 
 async function animation(from, to) {
-    let cardFrom = cards[from];
-    let cardTo = cards[to];
+    from.forEach(fr => cards[fr].classList.add('trans'));
+    for (let i = 0; i < from.length; i++) {
+        let cardFrom = cards[from[i]];
+        let cardTo = cards[to[i]];
 
-    cardFrom.firstElementChild.src = "icons/2HrS.svg";
-    cardTo.firstElementChild.src = "icons/2HrS.svg";
-    cardTo.classList.add('hide');
+        cardFrom.firstElementChild.src = "icons/2HrS.svg";
+        cardTo.firstElementChild.src = "icons/2HrS.svg";
+        cardTo.classList.add('hide');
 
+        let yB = cardFrom.getBoundingClientRect().right - cardTo.getBoundingClientRect().right;
+        let xB = cardTo.getBoundingClientRect().top - cardFrom.getBoundingClientRect().top;
+        cardFrom.style.transform = `translate(${xB}px, ${yB}px)`;
+    }
     await sleep(1000);
-    let yB = cardFrom.getBoundingClientRect().right - cardTo.getBoundingClientRect().right;
-    let xB = cardTo.getBoundingClientRect().top - cardFrom.getBoundingClientRect().top;
-    cardFrom.style.transform = `translate(${xB}px, ${yB}px)`;
+    from.forEach(fr => cards[fr].classList.remove('trans'));
+    cards = board.querySelectorAll('.card');
 }
 
 document.querySelector('#btnStart').addEventListener('click', async () => {
@@ -422,15 +425,15 @@ document.querySelector('#btnStart').addEventListener('click', async () => {
             newCard.classList.add('fade');
             boardContainer.insertBefore(newCard, boardContainer.children[fade]);
         }
-
+        
         await sleep(500);
         cards = board.querySelectorAll('.card');
-        addCardEventListener(cards);
+        addCardEventListener();
         cards.forEach(card => {
             if (oldMode != '') card.classList.remove(oldMode);
             card.classList.add(mode);
         })
-
+        
         if (oldMode != "") board.classList.remove(oldMode);
         board.classList.add(mode);
         

@@ -32,7 +32,6 @@
 }
 #menu #settings {
     position: absolute;
-    visibility: hidden;
     opacity: 0;
     width: 90%;
     border-collapse: collapse;
@@ -46,7 +45,6 @@
     transition: all .5s ease;
 }
 #menu #settings.appear {
-    visibility: visible;
     opacity: 1;
 }
 
