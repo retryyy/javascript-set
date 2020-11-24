@@ -28,6 +28,7 @@ let boardContainer = board.querySelector('#board');
 let cards = board.querySelectorAll('.card');
 let timer = game.querySelector('#timer');
 
+let gameOver = false;
 let gameOngoing = false;
 let choosing = false;
 let activePlayer;
@@ -36,6 +37,36 @@ let nrOfInstantiatedPlayers = 0;
 let playersInfo = [];
 
 let mode = "";
+
+
+// deck
+let color = 'g';
+let number = [1, 2, 3];
+let fill = ['O', 'S', 'H'];
+let shape = ['S', 'P', 'D'];
+
+let cardArray = new Array();
+let activeCardArray = new Array();
+
+createDeck();
+function createDeck() {
+    while (cardArray.length) cardArray.pop();
+
+    let idx = 0;
+    for (let n of number) {
+        for (let f of fill) {
+            for (let s of shape) {
+                cardArray[idx++] = {number: n,  fill: f, color: color, shape: s}
+            }
+        }
+    }
+    for (let i = cardArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * i);
+        const temp = cardArray[i];
+        cardArray[i] = cardArray[j];
+        cardArray[j] = temp;
+    }
+}
 
 // load
 loadPage();
@@ -111,8 +142,11 @@ players.addEventListener('click', (item) => {
 });
 
 // cards
-addCardEventListener();
+function refreshDOMCards() {
+    cards = board.querySelectorAll('.card');
+}
 function addCardEventListener() {
+    refreshDOMCards();
     cards.forEach(card => card.removeEventListener('click', cardEvent));
     cards.forEach(card => card.addEventListener('click', cardEvent));
 }
@@ -129,7 +163,7 @@ async function exchange() {
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
         choosing = false;
-        cards = board.querySelectorAll('.card');
+        refreshDOMCards();
 
         await checkSet(tickedCards);
         
@@ -147,16 +181,12 @@ async function startNewRound() {
     timer.classList.remove('last-secs')
 
     await sleep(1000);
-
     timer.classList.remove('load');
     
-    players.querySelectorAll('div').forEach(plate => {
-        plate.classList.remove('lock');
-    });
+    players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
 }
 
 async function moveOut(tickedCards) {
-    tickedCards.forEach(card => card.firstElementChild.src = "icons/2HrS.svg");
     let bounds = board.getBoundingClientRect();
     let half = (bounds.top + bounds.bottom) / 2;
     
@@ -177,6 +207,26 @@ async function moveBack(tickedCards) {
     await sleep(1000);
     tickedCards.forEach(card => card.style.transform = "");
     tickedCards.forEach(card => card.classList.remove('trans'));
+}
+
+function replaceCards(tickedCards) {
+    let arr = Array.from(cards);
+    let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
+
+    for (let rem of removed) {
+        let newCard = cardArray.pop();
+        activeCardArray[rem] = newCard;
+        cards[rem].firstElementChild.src = createCardName(newCard);
+    }
+}
+
+function removeCards(tickedCards) {
+    let arr = Array.from(cards);
+    let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
+    removed.forEach(rem => {
+        activeCardArray.splice(rem, 1);
+    });
+    console.log(activeCardArray);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -232,6 +282,7 @@ proceed.addEventListener('click', () => {
     nrOfInstantiatedPlayers++;
 
     if (nrOfInstantiatedPlayers == nrOfPlayers) {
+        generateDeck();
         refreshPlayersTable();
 
         menu.classList.remove('appear');
@@ -248,6 +299,26 @@ proceed.addEventListener('click', () => {
 
 function addPlayer(name) {
     playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
+}
+
+function generateDeck() {
+    createDeck();
+    while (activeCardArray.push(cardArray.pop()) != 12);
+
+    for (let card of activeCardArray) {
+        let cardFile = createCardName(card);
+        let newCard = document.createElement('div');
+        newCard.setAttribute('class', 'card');
+        let newCardImg = document.createElement('img');
+        newCardImg.setAttribute('src', cardFile);
+        newCard.appendChild(newCardImg);
+        boardContainer.appendChild(newCard);
+    }
+    addCardEventListener();
+}
+
+function createCardName(card) {
+    return 'icons/' + card.number + card.fill + card.color + card.shape + '.svg';
 }
 
 function refreshPlayersTable() {
@@ -327,9 +398,14 @@ async function checkSet(tickedCards) {
     if (mode == "") {
         await sleep(1000);
         await moveOut(tickedCards);
-        await sleep(500);
-        await moveBack(tickedCards);
-        return true;
+        if (!isEmptyDeck()) {
+            replaceCards(tickedCards);
+            await sleep(500);
+            await moveBack(tickedCards);
+        } else {
+            removeCards(tickedCards);
+        }
+        return;
     }
 
     await sleep(1000);
@@ -374,8 +450,10 @@ async function checkSet(tickedCards) {
 
     await sleep(500);
     boardContainer.classList.remove('transition-zero');
+}
 
-    return false;
+function isEmptyDeck() {
+    return cardArray.length == 0;
 }
 
 async function animation(from, to) {
@@ -394,7 +472,7 @@ async function animation(from, to) {
     }
     await sleep(1000);
     from.forEach(fr => cards[fr].classList.remove('trans'));
-    cards = board.querySelectorAll('.card');
+    refreshDOMCards();
 }
 
 document.querySelector('#btnStart').addEventListener('click', async () => {
@@ -427,7 +505,6 @@ document.querySelector('#btnStart').addEventListener('click', async () => {
         }
         
         await sleep(500);
-        cards = board.querySelectorAll('.card');
         addCardEventListener();
         cards.forEach(card => {
             if (oldMode != '') card.classList.remove(oldMode);
