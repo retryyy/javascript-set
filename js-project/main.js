@@ -168,7 +168,9 @@ async function exchange() {
         await checkSet(tickedCards);
         
         playersInfo[activePlayer].score += 1;
-        startNewRound();
+        await startNewRound();
+
+        console.log(activeCardArray);
     }
 }
 
@@ -209,24 +211,12 @@ async function moveBack(tickedCards) {
     tickedCards.forEach(card => card.classList.remove('trans'));
 }
 
-function replaceCards(tickedCards) {
-    let arr = Array.from(cards);
-    let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
-
+function replaceCards(removed) {
     for (let rem of removed) {
         let newCard = cardArray.pop();
         activeCardArray[rem] = newCard;
         cards[rem].firstElementChild.src = createCardName(newCard);
     }
-}
-
-function removeCards(tickedCards) {
-    let arr = Array.from(cards);
-    let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
-    removed.forEach(rem => {
-        activeCardArray.splice(rem, 1);
-    });
-    console.log(activeCardArray);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -389,21 +379,25 @@ async function checkSet(tickedCards) {
     let arr = Array.from(cards);
     let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
 
+    removed.forEach(rem => console.log(activeCardArray[rem] == undefined));
+
     await sleep(1000);
     tickedCards.forEach(card => {
         card.classList.add('fade');
         card.classList.remove('active');
     });
 
+    console.log('cards left: ' + cardArray.length);
+
     if (mode == "") {
         await sleep(1000);
-        await moveOut(tickedCards);
         if (!isEmptyDeck()) {
-            replaceCards(tickedCards);
+            await moveOut(tickedCards);
+            replaceCards(removed);
             await sleep(500);
             await moveBack(tickedCards);
         } else {
-            removeCards(tickedCards);
+            removed.reverse().forEach(rem => activeCardArray[rem] = undefined);
         }
         return;
     }
@@ -446,7 +440,10 @@ async function checkSet(tickedCards) {
     await sleep(500);
     boardContainer.classList.add('transition-zero');
     boardContainer.classList.remove('shrink');
-    fadings.forEach(fade => cards[fade].remove());
+    fadings.reverse().forEach(fade => {
+        cards[fade].remove();
+        activeCardArray.splice(fade, 1);
+    });
 
     await sleep(500);
     boardContainer.classList.remove('transition-zero');
@@ -462,8 +459,9 @@ async function animation(from, to) {
         let cardFrom = cards[from[i]];
         let cardTo = cards[to[i]];
 
-        cardFrom.firstElementChild.src = "icons/2HrS.svg";
-        cardTo.firstElementChild.src = "icons/2HrS.svg";
+        cardTo.firstElementChild.src = cardFrom.firstElementChild.src;
+        activeCardArray[to[i]] = activeCardArray[from[i]];
+
         cardTo.classList.add('hide');
 
         let yB = cardFrom.getBoundingClientRect().right - cardTo.getBoundingClientRect().right;
@@ -493,10 +491,13 @@ document.querySelector('#btnStart').addEventListener('click', async () => {
         boardContainer.classList.add('shrink');
 
         for (fade of fadings) {
+            let newActiveCard = cardArray.pop();
+            activeCardArray.splice(fade, 0, newActiveCard);
+
             let newCard = document.createElement('div');
             newCard.setAttribute('class', 'card');
             let newCardImg = document.createElement('img');
-            newCardImg.setAttribute('src', 'icons/2HrS.svg');
+            newCardImg.setAttribute('src', createCardName(newActiveCard));
             newCard.appendChild(newCardImg);
 
             newCard.classList.add('squeeze');
@@ -523,5 +524,7 @@ document.querySelector('#btnStart').addEventListener('click', async () => {
         await moveBack(newCards);
         
         boardContainer.classList.remove('transition-zero');
+
+        console.log(activeCardArray);
     }
 });
