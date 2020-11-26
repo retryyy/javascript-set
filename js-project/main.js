@@ -38,15 +38,16 @@ let playersInfo = [];
 
 let mode = "";
 
-
 // deck
 let color = 'g';
 let number = [1, 2, 3];
 let fill = ['O', 'S', 'H'];
 let shape = ['S', 'P', 'D'];
+let attributes = ['number', 'fill', 'shape'];
 
 let cardArray = new Array();
 let activeCardArray = new Array();
+let sets;
 
 createDeck();
 function createDeck() {
@@ -165,12 +166,16 @@ async function exchange() {
         choosing = false;
         refreshDOMCards();
 
-        await checkSet(tickedCards);
-        
-        playersInfo[activePlayer].score += 1;
+        let res = await checkSet(tickedCards);
+        res ? playersInfo[activePlayer].score += 1 : playersInfo[activePlayer].score -= 1;
         await startNewRound();
 
         console.log(activeCardArray);
+        setSets();
+        while (sets.length == 0 && cardArray.length != 0) {
+            await growTable();
+            setSets();
+        }
     }
 }
 
@@ -263,7 +268,7 @@ start.addEventListener('click', () => {
 start.addEventListener('transitionend', () => playerInput.focus());
 
 //proceed
-proceed.addEventListener('click', () => {
+proceed.addEventListener('click', async () => {
     let name = playerInput.value;
     if (!isValidInput(name)) return;
 
@@ -272,7 +277,7 @@ proceed.addEventListener('click', () => {
     nrOfInstantiatedPlayers++;
 
     if (nrOfInstantiatedPlayers == nrOfPlayers) {
-        generateDeck();
+        await generateDeck();
         refreshPlayersTable();
 
         menu.classList.remove('appear');
@@ -291,7 +296,7 @@ function addPlayer(name) {
     playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
 }
 
-function generateDeck() {
+async function generateDeck() {
     createDeck();
     while (activeCardArray.push(cardArray.pop()) != 12);
 
@@ -305,6 +310,12 @@ function generateDeck() {
         boardContainer.appendChild(newCard);
     }
     addCardEventListener();
+
+    setSets();
+    while (sets.length == 0 && cardArray.length != 0) {
+        await growTable();
+        setSets();
+    }
 }
 
 function createCardName(card) {
@@ -379,78 +390,109 @@ async function checkSet(tickedCards) {
     let arr = Array.from(cards);
     let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
 
-    removed.forEach(rem => console.log(activeCardArray[rem] == undefined));
+    let a = JSON.stringify(sets);
+    let b = JSON.stringify(removed);
 
     await sleep(1000);
-    tickedCards.forEach(card => {
-        card.classList.add('fade');
-        card.classList.remove('active');
-    });
+    if (a.indexOf(b) != -1) {
+        tickedCards.forEach(card => {
+            card.classList.add('fade');
+            card.classList.remove('active');
+        });
 
-    console.log('cards left: ' + cardArray.length);
-
-    if (mode == "") {
-        await sleep(1000);
-        if (!isEmptyDeck()) {
-            await moveOut(tickedCards);
-            replaceCards(removed);
-            await sleep(500);
-            await moveBack(tickedCards);
-        } else {
-            removed.reverse().forEach(rem => activeCardArray[rem] = undefined);
+        if (mode == "") {
+            await sleep(1000);
+            if (!isEmptyDeck()) {
+                await moveOut(tickedCards);
+                replaceCards(removed);
+                await sleep(500);
+                await moveBack(tickedCards);
+            } else {
+                removed.reverse().forEach(rem => activeCardArray[rem] = undefined);
+            }
+            console.log('cards left: ' + cardArray.length);
+            return true;
         }
-        return;
+
+        await sleep(1000);
+        let fadings;
+        let oldMode = mode;
+        if (mode == 'twenty-one') {
+            fadings = [6, 13, 20];
+            mode = 'eighteen'
+        } else if (mode == 'eighteen') {
+            fadings = [5, 11, 17];
+            mode = 'fifteen'
+        } else if (mode == 'fifteen') {
+            fadings = [4, 9, 14];
+            mode = "";
+        }
+
+        let needAnimTo = removed.filter(card => !fadings.includes(card));
+        let needAnimFrom = fadings.filter(card => !removed.includes(card));
+            
+        await animation(needAnimFrom, needAnimTo);
+
+        needAnimTo.forEach(needTo => {
+            cards[needTo].classList.remove('fade');
+            cards[needTo].classList.remove('hide');
+        });
+
+        await sleep(500);
+        needAnimFrom.forEach(needFrom => cards[needFrom].style.opacity = 0);
+        boardContainer.classList.add('shrink');
+        board.classList.remove(oldMode);
+        if (mode != "") board.classList.add(mode);
+        cards.forEach(card => {
+            card.classList.remove(oldMode);
+            if (mode != "") card.classList.add(mode);
+        })
+        fadings.forEach(fade => cards[fade].style.width = '0%');
+
+        await sleep(500);
+        boardContainer.classList.add('transition-zero');
+        boardContainer.classList.remove('shrink');
+        fadings.reverse().forEach(fade => {
+            cards[fade].remove();
+            activeCardArray.splice(fade, 1);
+        });
+
+        await sleep(500);
+        boardContainer.classList.remove('transition-zero');
+
+        return true;
+    } else {
+        tickedCards.forEach(card => card.classList.remove('active'));
+        return false;
     }
-
-    await sleep(1000);
-    let fadings;
-    let oldMode = mode;
-    if (mode == 'twenty-one') {
-        fadings = [6, 13, 20];
-        mode = 'eighteen'
-    } else if (mode == 'eighteen') {
-        fadings = [5, 11, 17];
-        mode = 'fifteen'
-    } else if (mode == 'fifteen') {
-        fadings = [4, 9, 14];
-        mode = "";
-    }
-
-    let needAnimTo = removed.filter(card => !fadings.includes(card));
-    let needAnimFrom = fadings.filter(card => !removed.includes(card));
-        
-    await animation(needAnimFrom, needAnimTo);
-
-    needAnimTo.forEach(needTo => {
-        cards[needTo].classList.remove('fade');
-        cards[needTo].classList.remove('hide');
-    });
-
-    await sleep(500);
-    needAnimFrom.forEach(needFrom => cards[needFrom].style.opacity = 0);
-    boardContainer.classList.add('shrink');
-    board.classList.remove(oldMode);
-    if (mode != "") board.classList.add(mode);
-    cards.forEach(card => {
-        card.classList.remove(oldMode);
-        if (mode != "") card.classList.add(mode);
-    })
-    fadings.forEach(fade => cards[fade].style.width = '0%');
-
-    await sleep(500);
-    boardContainer.classList.add('transition-zero');
-    boardContainer.classList.remove('shrink');
-    fadings.reverse().forEach(fade => {
-        cards[fade].remove();
-        activeCardArray.splice(fade, 1);
-    });
-
-    await sleep(500);
-    boardContainer.classList.remove('transition-zero');
 }
 
 function isEmptyDeck() {
     return cardArray.length == 0;
+}
+
+function setSets() {
+    let list = [];
+    let len = activeCardArray.length;
+    for (let i = 0; i < len - 2; i++) {
+        for (let j = i + 1; j < len - 1; j++) {
+            for (let k = j + 1; k < len; k++) {
+                if (activeCardArray[i] != undefined && activeCardArray[j] != undefined && activeCardArray[k] != undefined) {
+                    let b = true;
+                    for (attr of attributes) {
+                        b = b && ((activeCardArray[i][attr] == activeCardArray[j][attr] 
+                                    && activeCardArray[j][attr] == activeCardArray[k][attr]) ||
+                                        (activeCardArray[i][attr] != activeCardArray[j][attr]
+                                        && activeCardArray[j][attr] != activeCardArray[k][attr]
+                                        && activeCardArray[i][attr] != activeCardArray[k][attr]));
+                    }
+                    if (b) list.push([i, j, k]);
+                }
+            }
+        }
+    }
+    sets = list;
+    console.log(sets);
 }
 
 async function animation(from, to) {
@@ -473,7 +515,7 @@ async function animation(from, to) {
     refreshDOMCards();
 }
 
-document.querySelector('#btnStart').addEventListener('click', async () => {
+async function growTable() {
     let oldMode = mode;
     if (mode == '') {
         fadings = [4, 9, 14];
@@ -527,4 +569,4 @@ document.querySelector('#btnStart').addEventListener('click', async () => {
 
         console.log(activeCardArray);
     }
-});
+}
