@@ -164,6 +164,7 @@ async function exchange() {
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
         refreshDOMCards();
+        await startNewRound();
 
         let res = await checkSet(tickedCards);
         res ? playersInfo[activePlayer].score += 1 : playersInfo[activePlayer].score -= 1;
@@ -185,7 +186,6 @@ async function exchange() {
             console.log('over');
             return;
         }
-        await startNewRound();
     }
 }
 
