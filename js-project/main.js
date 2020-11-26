@@ -125,7 +125,7 @@ function refreshTimer() {
 
 // game
 players.addEventListener('click', (item) => {
-    if (!choosing) {
+    if (!choosing && !gameOver) {
         players.querySelectorAll('div').forEach(plate => {
             plate.classList.remove('lock');
         });
@@ -153,7 +153,7 @@ function addCardEventListener() {
 }
 
 function cardEvent() {
-    if (choosing) {
+    if (choosing && !gameOver) {
         this.classList.toggle('active');
         exchange();
     }
@@ -163,19 +163,29 @@ async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
-        choosing = false;
         refreshDOMCards();
 
         let res = await checkSet(tickedCards);
         res ? playersInfo[activePlayer].score += 1 : playersInfo[activePlayer].score -= 1;
-        await startNewRound();
-
-        console.log(activeCardArray);
         setSets();
-        while (sets.length == 0 && cardArray.length != 0) {
-            await growTable();
-            setSets();
+
+        if (activeCardArray.length != 0) {
+            while (sets.length == 0 && cardArray.length != 0) {
+                await growTable();
+                setSets();
+            }
+            choosing = false;
+        } else {
+            gameOver = true;
         }
+
+        if (sets.length == 0) gameOver = true;
+        if (gameOver) {
+            await sleep(2000);
+            console.log('over');
+            return;
+        }
+        await startNewRound();
     }
 }
 
@@ -410,7 +420,6 @@ async function checkSet(tickedCards) {
             } else {
                 removed.reverse().forEach(rem => activeCardArray[rem] = undefined);
             }
-            console.log('cards left: ' + cardArray.length);
             return true;
         }
 
@@ -492,7 +501,6 @@ function setSets() {
         }
     }
     sets = list;
-    console.log(sets);
 }
 
 async function animation(from, to) {
@@ -566,7 +574,5 @@ async function growTable() {
         await moveBack(newCards);
         
         boardContainer.classList.remove('transition-zero');
-
-        console.log(activeCardArray);
     }
 }
