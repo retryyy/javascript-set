@@ -23,6 +23,7 @@ let logo = document.querySelector('#logo');
 let game = document.querySelector('#game');
 let layout = document.querySelector('#layout');
 let players = layout.querySelector('#players');
+let assistShow = layout.querySelector('#assist_show');
 let board = game.querySelector('#cards-board');
 let boardContainer = board.querySelector('#board');
 let cards = board.querySelectorAll('.card');
@@ -31,6 +32,7 @@ let timer = game.querySelector('#timer');
 let gameOver = false;
 let gameOngoing = false;
 let choosing = false;
+let example = false;
 let activePlayer;
 let nrOfPlayers = 1;
 let nrOfInstantiatedPlayers = 0;
@@ -72,29 +74,19 @@ function createDeck() {
 // load
 loadPage();
 async function loadPage() {
-    welcome.classList.add('appear');
-
-    let elements = document.body.getElementsByTagName('div');
-    for (elem of elements) {
-        elem.classList.add('hidden');
-    }
-    await sleep(000);
+    await sleep(1000);
 
     sidebarClick.classList.add('opened');
     sidebar.classList.add('opened');
     sidebarClick.firstElementChild.classList.add('click');
     
-    game.classList.toggle('hidden');
-    menu.classList.remove('appear');
-    layout.classList.remove('appear');
     logo.classList.add('appear');
     welcome.classList.add('disappear');
+    await sleep(600);
+    welcome.remove();
+
     resetMenu();
     settings.classList.add('appear');
-    
-    for (elem of elements) {
-        elem.classList.remove('hidden');
-    }
 }
 
 // timer ///////////////////////////////////////////////////////////////////////////////
@@ -115,7 +107,7 @@ async function countDown() {
         board.classList.remove('unlock');
         playersInfo[activePlayer].score -= 1;
         
-        startNewRound();
+        await startNewRound();
     }
 }
 
@@ -125,7 +117,7 @@ function refreshTimer() {
 
 // game
 players.addEventListener('click', (item) => {
-    if (!choosing && !gameOver) {
+    if (!choosing && !gameOver && !example) {
         players.querySelectorAll('div').forEach(plate => {
             plate.classList.remove('lock');
         });
@@ -163,8 +155,6 @@ async function exchange() {
     let tickedCards = document.querySelectorAll('.card.active');
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
-        refreshDOMCards();
-        await startNewRound();
 
         let res = await checkSet(tickedCards);
         res ? playersInfo[activePlayer].score += 1 : playersInfo[activePlayer].score -= 1;
@@ -175,17 +165,17 @@ async function exchange() {
                 await growTable();
                 setSets();
             }
-            choosing = false;
         } else {
             gameOver = true;
         }
 
         if (sets.length == 0) gameOver = true;
         if (gameOver) {
-            await sleep(2000);
+            await sleep(1000);
             console.log('over');
             return;
         }
+        await startNewRound();
     }
 }
 
@@ -201,6 +191,7 @@ async function startNewRound() {
     timer.classList.remove('load');
     
     players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
+    choosing = false;
 }
 
 async function moveOut(tickedCards) {
@@ -403,8 +394,8 @@ async function checkSet(tickedCards) {
     let a = JSON.stringify(sets);
     let b = JSON.stringify(removed);
 
-    await sleep(1000);
     if (a.indexOf(b) != -1) {
+        await sleep(1000);
         tickedCards.forEach(card => {
             card.classList.add('fade');
             card.classList.remove('active');
@@ -412,7 +403,7 @@ async function checkSet(tickedCards) {
 
         if (mode == "") {
             await sleep(1000);
-            if (!isEmptyDeck()) {
+            if (cardArray.length != 0) {
                 await moveOut(tickedCards);
                 replaceCards(removed);
                 await sleep(500);
@@ -468,16 +459,18 @@ async function checkSet(tickedCards) {
 
         await sleep(500);
         boardContainer.classList.remove('transition-zero');
+        refreshDOMCards();
 
         return true;
     } else {
-        tickedCards.forEach(card => card.classList.remove('active'));
+        tickedCards.forEach(card => card.classList.add('wrong'));
+        await sleep(4000);
+        tickedCards.forEach(card => {
+            card.classList.remove('active');
+            card.classList.remove('wrong');
+        });
         return false;
     }
-}
-
-function isEmptyDeck() {
-    return cardArray.length == 0;
 }
 
 function setSets() {
@@ -502,6 +495,29 @@ function setSets() {
     }
     sets = list;
 }
+
+assistShow.addEventListener('click', async () => {
+    if (!choosing && !example && sets.length > 0) {
+        example = true;
+        let set = sets[Math.floor(Math.random() * sets.length)];
+
+        for (let i = 0; i < activeCardArray.length; i++) {
+            if (!set.includes(i)) {
+                cards[i].firstElementChild.style.transition = 'opacity .4s';
+                cards[i].classList.add('example');
+            };
+        }
+        await sleep(3000);
+        for (let i = 0; i < activeCardArray.length; i++) {
+            if (!set.includes(i)) {
+                cards[i].classList.remove('example');
+                cards[i].firstElementChild.style.transition = 'opacity 0';
+            }
+
+        }
+        example = false;
+    }
+});
 
 async function animation(from, to) {
     from.forEach(fr => cards[fr].classList.add('trans'));
@@ -574,5 +590,6 @@ async function growTable() {
         await moveBack(newCards);
         
         boardContainer.classList.remove('transition-zero');
+        refreshDOMCards();
     }
 }
