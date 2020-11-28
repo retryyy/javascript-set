@@ -23,6 +23,8 @@ let logo = document.querySelector('#logo');
 let game = document.querySelector('#game');
 let layout = document.querySelector('#layout');
 let players = layout.querySelector('#players');
+let assistNumber = layout.querySelector('#assist_number');
+let numberOfSets = layout.querySelector('#number-of-sets');
 let assistShow = layout.querySelector('#assist_show');
 let board = game.querySelector('#cards-board');
 let boardContainer = board.querySelector('#board');
@@ -32,7 +34,7 @@ let timer = game.querySelector('#timer');
 let gameOver = false;
 let gameOngoing = false;
 let choosing = false;
-let example = false;
+let assist = false;
 let activePlayer;
 let nrOfPlayers = 1;
 let nrOfInstantiatedPlayers = 0;
@@ -74,7 +76,7 @@ function createDeck() {
 // load
 loadPage();
 async function loadPage() {
-    await sleep(1000);
+    await sleep(000);
 
     sidebarClick.classList.add('opened');
     sidebar.classList.add('opened');
@@ -117,7 +119,7 @@ function refreshTimer() {
 
 // game
 players.addEventListener('click', (item) => {
-    if (!choosing && !gameOver && !example) {
+    if (!choosing && !gameOver && !assist) {
         players.querySelectorAll('div').forEach(plate => {
             plate.classList.remove('lock');
         });
@@ -497,8 +499,8 @@ function setSets() {
 }
 
 assistShow.addEventListener('click', async () => {
-    if (!choosing && !example && sets.length > 0) {
-        example = true;
+    if (!choosing && !assist && sets.length > 0) {
+        assist = true;
         let set = sets[Math.floor(Math.random() * sets.length)];
 
         for (let i = 0; i < activeCardArray.length; i++) {
@@ -513,9 +515,8 @@ assistShow.addEventListener('click', async () => {
                 cards[i].classList.remove('example');
                 cards[i].firstElementChild.style.transition = 'opacity 0';
             }
-
         }
-        example = false;
+        assist = false;
     }
 });
 
@@ -593,3 +594,19 @@ async function growTable() {
         refreshDOMCards();
     }
 }
+
+assistNumber.addEventListener('click', async () => {
+    if (!choosing && !assist && sets.length > 0) {
+        assist = true;
+
+        numberOfSets.innerText = sets.length;
+
+        boardContainer.classList.add('hide');
+        numberOfSets.classList.add('appear');
+        await sleep(4000);
+        boardContainer.classList.remove('hide');
+        numberOfSets.classList.remove('appear');
+
+        assist = false;
+    }
+})

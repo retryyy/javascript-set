@@ -1,8 +1,10 @@
 #board {
+    position: absolute;
     width: 100%;
     height: 100%;
     display: flex;
     flex-wrap: wrap;
+    opacity: 1;
 
     transition: all .5s ease-in-out;
     padding: 1%;
@@ -12,6 +14,30 @@
 }
 #board.shrink {
     width: 100.5%;
+}
+#board.hide {
+    transform: scale(.3);
+    opacity: 0;
+}
+
+#cards-board #number-of-sets {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+
+    font-size: 15vw;
+    transform: rotate(-90deg) scale(.4);
+    transition: all .5s;
+    opacity: 0;
+}
+#cards-board #number-of-sets.appear {
+    transform: rotate(-90deg) scale(1);
+    opacity: 1;
 }
 
 #cards-board {
