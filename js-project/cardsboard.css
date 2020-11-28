@@ -32,7 +32,7 @@
 
     font-size: 15vw;
     transform: rotate(-90deg) scale(.4);
-    transition: all .5s;
+    transition: all .7s;
     opacity: 0;
 }
 #cards-board #number-of-sets.appear {

@@ -7,10 +7,10 @@
     align-items: center;
     pointer-events: none;
     color:  rgba(255, 255, 255, .4);
-    font-size: 1800%;
+    font-size: 20vw;
     font-weight: bold;
     opacity: .8;
-    transform: scale(.9);
+    transform: scale(1);
     transition: all .3s ease;
 }
 

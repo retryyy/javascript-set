@@ -24,8 +24,8 @@ let game = document.querySelector('#game');
 let layout = document.querySelector('#layout');
 let players = layout.querySelector('#players');
 let assistNumber = layout.querySelector('#assist_number');
-let numberOfSets = layout.querySelector('#number-of-sets');
 let assistShow = layout.querySelector('#assist_show');
+let container = game.querySelector('#container');
 let board = game.querySelector('#cards-board');
 let boardContainer = board.querySelector('#board');
 let cards = board.querySelectorAll('.card');
@@ -167,14 +167,13 @@ async function exchange() {
                 await growTable();
                 setSets();
             }
+            if (sets.length == 0) gameOver = true;
         } else {
             gameOver = true;
         }
 
-        if (sets.length == 0) gameOver = true;
         if (gameOver) {
-            await sleep(1000);
-            console.log('over');
+            winner();
             return;
         }
         await startNewRound();
@@ -596,17 +595,42 @@ async function growTable() {
 }
 
 assistNumber.addEventListener('click', async () => {
-    if (!choosing && !assist && sets.length > 0) {
+    if (!choosing && !assist) {
         assist = true;
 
-        numberOfSets.innerText = sets.length;
+        let elem = document.createElement('div');
+        elem.innerText = sets.length;
+        elem.setAttribute('id', 'number-of-sets');
+        board.appendChild(elem);
 
         boardContainer.classList.add('hide');
-        numberOfSets.classList.add('appear');
+        elem.classList.add('appear');
         await sleep(4000);
         boardContainer.classList.remove('hide');
-        numberOfSets.classList.remove('appear');
+        elem.classList.remove('appear');
+
+        await sleep(1000);
+        elem.remove();
 
         assist = false;
     }
 })
+
+async function winner() {
+    gameOngoing = false;
+    
+    let elem = document.createElement('div');
+    elem.innerText = playersInfo[0].name + ' won';
+    elem.setAttribute('id', 'winner');
+    container.appendChild(elem);
+
+    await sleep(1000);
+    layout.classList.remove('appear');
+    elem.classList.add('appear');
+
+    await sleep(3000);
+    elem.classList.remove('appear');
+
+    await sleep(1000);
+    loadPage();
+}
