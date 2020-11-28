@@ -23,8 +23,9 @@ let logo = document.querySelector('#logo');
 let game = document.querySelector('#game');
 let layout = document.querySelector('#layout');
 let players = layout.querySelector('#players');
-let assistNumber = layout.querySelector('#assist_number');
-let assistShow = layout.querySelector('#assist_show');
+let assistBtn = layout.querySelector('#assist');
+let assists = menu.querySelectorAll('input[name="toggle_option"]');
+let grow = layout.querySelector('#grow');
 let container = game.querySelector('#container');
 let board = game.querySelector('#cards-board');
 let boardContainer = board.querySelector('#board');
@@ -41,6 +42,7 @@ let nrOfInstantiatedPlayers = 0;
 let playersInfo;
 
 let mode = "";
+let assistType;
 
 // deck
 let color = 'g';
@@ -295,6 +297,7 @@ proceed.addEventListener('click', async () => {
         resetMenu();
         settings.classList.add('appear');
         playerName.classList.remove('appear');
+        setAssistType();
 
         gameOngoing = true;
         gameOver = false;
@@ -303,6 +306,12 @@ proceed.addEventListener('click', async () => {
     }
     playerName.querySelector('label span').innerText = nrOfInstantiatedPlayers + 1;
 })
+
+function setAssistType() {
+    assists.forEach(e => {
+        if (e.checked) assistType = e.id;
+    });
+}
 
 async function generateDeck() {
     cardArray = new Array();
@@ -330,6 +339,7 @@ async function generateDeck() {
         await growTable();
         setSets();
     }
+    console.log(activeCardArray);
 }
 
 function createCardName(card) {
@@ -505,28 +515,6 @@ function setSets() {
     sets = list;
 }
 
-assistShow.addEventListener('click', async () => {
-    if (!choosing && !assist && sets.length > 0) {
-        assist = true;
-        let set = sets[Math.floor(Math.random() * sets.length)];
-
-        for (let i = 0; i < activeCardArray.length; i++) {
-            if (!set.includes(i)) {
-                cards[i].firstElementChild.style.transition = 'opacity .4s';
-                cards[i].classList.add('example');
-            };
-        }
-        await sleep(3000);
-        for (let i = 0; i < activeCardArray.length; i++) {
-            if (!set.includes(i)) {
-                cards[i].classList.remove('example');
-                cards[i].firstElementChild.style.transition = 'opacity 0';
-            }
-        }
-        assist = false;
-    }
-});
-
 async function animation(from, to) {
     from.forEach(fr => cards[fr].classList.add('trans'));
     for (let i = 0; i < from.length; i++) {
@@ -602,27 +590,50 @@ async function growTable() {
     }
 }
 
-assistNumber.addEventListener('click', async () => {
-    if (!choosing && !assist) {
-        assist = true;
-
-        let elem = document.createElement('div');
-        elem.innerText = sets.length;
-        elem.setAttribute('id', 'number-of-sets');
-        board.appendChild(elem);
-
-        boardContainer.classList.add('hide');
-        elem.classList.add('appear');
-        await sleep(4000);
-        boardContainer.classList.remove('hide');
-        elem.classList.remove('appear');
-
-        await sleep(1000);
-        elem.remove();
-
-        assist = false;
+assistBtn.addEventListener('click', async () => {
+    if (assistType == 'number_assist') {
+        if (!choosing && !assist) {
+            assist = true;
+    
+            let elem = document.createElement('div');
+            elem.innerText = sets.length;
+            elem.setAttribute('id', 'number-of-sets');
+            board.appendChild(elem);
+            await sleep(500);
+    
+            boardContainer.classList.add('hide');
+            elem.classList.add('appear');
+            await sleep(4000);
+            boardContainer.classList.remove('hide');
+            elem.classList.remove('appear');
+    
+            await sleep(1000);
+            elem.remove();
+    
+            assist = false;
+        }
+    } else if (assistType == 'show_assist') {
+        if (!choosing && !assist && sets.length > 0) {
+            assist = true;
+            let set = sets[Math.floor(Math.random() * sets.length)];
+    
+            for (let i = 0; i < activeCardArray.length; i++) {
+                if (!set.includes(i)) {
+                    cards[i].firstElementChild.style.transition = 'opacity .4s';
+                    cards[i].classList.add('example');
+                };
+            }
+            await sleep(3000);
+            for (let i = 0; i < activeCardArray.length; i++) {
+                if (!set.includes(i)) {
+                    cards[i].classList.remove('example');
+                    cards[i].firstElementChild.style.transition = 'opacity 0';
+                }
+            }
+            assist = false;
+        }
     }
-})
+});
 
 async function winner() {
     let elem = document.createElement('div');
@@ -640,3 +651,9 @@ async function winner() {
     await sleep(1000);
     elem.remove();
 }
+
+
+grow.addEventListener('click', async () => {
+    await growTable();
+    setSets();
+})

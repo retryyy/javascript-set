@@ -38,16 +38,16 @@
     transition: all .4s ease;
 }
 
-#first_toggle:checked ~ #toggle_option_slider {
+#no_assist:checked ~ #toggle_option_slider {
     background: rgba(255, 255, 255, .5);
 }
 
-#second_toggle:checked ~ #toggle_option_slider{
+#number_assist:checked ~ #toggle_option_slider{
     background: rgba(255, 255, 255, .5);
     transform: translateX(100%);
 }
 
-#third_toggle:checked ~ #toggle_option_slider{
+#show_assist:checked ~ #toggle_option_slider{
     background: rgba(255, 255, 255, .5);
     transform: translateX(200%);
 }

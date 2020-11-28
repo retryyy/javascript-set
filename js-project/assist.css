@@ -1,13 +1,14 @@
-#assist_number {
+#assist {
+    width: 35%;
     text-align: right;
 }
-#assist_number.lock {
+#assist.lock {
     pointer-events: none;
 }
-#asist_show {
+#grow {
     text-align: left;
 }
-#asist_show.lock {
+#grow.lock {
     pointer-events: none;
 }
 
