@@ -31,14 +31,14 @@ let boardContainer = board.querySelector('#board');
 let cards = board.querySelectorAll('.card');
 let timer = game.querySelector('#timer');
 
-let gameOver = false;
+let gameOver = true;
 let gameOngoing = false;
 let choosing = false;
 let assist = false;
 let activePlayer;
 let nrOfPlayers = 1;
 let nrOfInstantiatedPlayers = 0;
-let playersInfo = [];
+let playersInfo;
 
 let mode = "";
 
@@ -49,14 +49,11 @@ let fill = ['O', 'S', 'H'];
 let shape = ['S', 'P', 'D'];
 let attributes = ['number', 'fill', 'shape'];
 
-let cardArray = new Array();
-let activeCardArray = new Array();
+let cardArray;
+let activeCardArray;
 let sets;
 
-createDeck();
 function createDeck() {
-    while (cardArray.length) cardArray.pop();
-
     let idx = 0;
     for (let n of number) {
         for (let f of fill) {
@@ -99,9 +96,7 @@ async function countDown() {
 	sec -= .01;
 	if (sec >= 0) {
         if (!acted) {
-            if (sec < 4) {
-                timer.classList.add('last-secs');
-            }
+            if (sec < 4) timer.classList.add('last-secs');
             setTimeout(countDown, 10);
         }
 	} else {
@@ -117,12 +112,20 @@ function refreshTimer() {
     timer.style.width = (sec * 100 / 10) + "%";
 }
 
+async function resetTimer() {
+    timer.classList.add('load');
+    sec = 10;
+    refreshTimer();
+    timer.classList.remove('last-secs');
+
+    await sleep(1000);
+    timer.classList.remove('load');
+}
+
 // game
 players.addEventListener('click', (item) => {
     if (!choosing && !gameOver && !assist) {
-        players.querySelectorAll('div').forEach(plate => {
-            plate.classList.remove('lock');
-        });
+        players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
         board.classList.add('unlock');
 
         choosing = true;
@@ -158,6 +161,7 @@ async function exchange() {
     if (tickedCards.length == 3) {
         board.classList.remove('unlock');
 
+        acted = true;
         let res = await checkSet(tickedCards);
         res ? playersInfo[activePlayer].score += 1 : playersInfo[activePlayer].score -= 1;
         setSets();
@@ -173,7 +177,12 @@ async function exchange() {
         }
 
         if (gameOver) {
-            winner();
+            gameOngoing = false;
+            choosing = false;
+
+            await winner();
+            loadPage();
+            await resetTimer()
             return;
         }
         await startNewRound();
@@ -181,15 +190,10 @@ async function exchange() {
 }
 
 async function startNewRound() {
-    timer.classList.add('load');
     Array.from(players.querySelectorAll('tr')).forEach(player => player.classList.remove('active'));
-    sec = 10;
-    refreshTimer();
-    refreshPlayersTable()
-    timer.classList.remove('last-secs')
 
-    await sleep(1000);
-    timer.classList.remove('load');
+    refreshPlayersTable();
+    resetTimer();
     
     players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
     choosing = false;
@@ -265,6 +269,10 @@ start.addEventListener('click', () => {
     players.innerHTML = "";
     settings.classList.remove('appear');
     playerName.classList.add('appear');
+
+    gameOngoing = false;
+    gameOver = true;
+    playersInfo = [];
 });
 
 start.addEventListener('transitionend', () => playerInput.focus());
@@ -274,7 +282,7 @@ proceed.addEventListener('click', async () => {
     let name = playerInput.value;
     if (!isValidInput(name)) return;
 
-    addPlayer(name);
+    playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
     playerInput.value = "";
     nrOfInstantiatedPlayers++;
 
@@ -289,16 +297,20 @@ proceed.addEventListener('click', async () => {
         playerName.classList.remove('appear');
 
         gameOngoing = true;
+        gameOver = false;
+
         return;
     }
     playerName.querySelector('label span').innerText = nrOfInstantiatedPlayers + 1;
 })
 
-function addPlayer(name) {
-    playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
-}
-
 async function generateDeck() {
+    cardArray = new Array();
+    activeCardArray = new Array();
+
+    cards.forEach(e => e.remove());
+    refreshDOMCards();
+
     createDeck();
     while (activeCardArray.push(cardArray.pop()) != 12);
 
@@ -388,7 +400,6 @@ function stepperInput(id, s, m) {
 }
 
 async function checkSet(tickedCards) {
-    acted = true;
     let arr = Array.from(cards);
     let removed = [arr.indexOf(tickedCards[0]), arr.indexOf(tickedCards[1]), arr.indexOf(tickedCards[2])];
 
@@ -397,13 +408,11 @@ async function checkSet(tickedCards) {
 
     if (a.indexOf(b) != -1) {
         await sleep(1000);
-        tickedCards.forEach(card => {
-            card.classList.add('fade');
-            card.classList.remove('active');
-        });
+        tickedCards.forEach(card => card.classList.add('fade'));
+        await sleep(1000);
+        tickedCards.forEach(card => card.classList.remove('active'));
 
         if (mode == "") {
-            await sleep(1000);
             if (cardArray.length != 0) {
                 await moveOut(tickedCards);
                 replaceCards(removed);
@@ -415,7 +424,6 @@ async function checkSet(tickedCards) {
             return true;
         }
 
-        await sleep(1000);
         let fadings;
         let oldMode = mode;
         if (mode == 'twenty-one') {
@@ -617,8 +625,6 @@ assistNumber.addEventListener('click', async () => {
 })
 
 async function winner() {
-    gameOngoing = false;
-    
     let elem = document.createElement('div');
     elem.innerText = playersInfo[0].name + ' won';
     elem.setAttribute('id', 'winner');
@@ -632,5 +638,5 @@ async function winner() {
     elem.classList.remove('appear');
 
     await sleep(1000);
-    loadPage();
+    elem.remove();
 }

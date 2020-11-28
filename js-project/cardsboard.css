@@ -99,6 +99,7 @@
 .card.fade {
     opacity: 0;
     transition: all .5s;
+    visibility: hidden;
 }
 .card.wrong {
     background: crimson;
@@ -122,5 +123,5 @@
     position: absolute;
 }
 .card.active img {
-    opacity: .7;
+    opacity: .6;
 }
