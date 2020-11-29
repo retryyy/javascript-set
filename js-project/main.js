@@ -34,7 +34,7 @@ let timer = game.querySelector('#timer');
 
 let gameOver = true;
 let gameOngoing = false;
-let choosing;
+let choosing = false;
 let lock = false;
 let singlePlayer;
 let activePlayer;
@@ -132,6 +132,8 @@ players.addEventListener('click', (item) => {
         board.classList.add('unlock');
 
         choosing = true;
+        lock = true;
+
         acted = false;
         setTimeout(countDown, 0);
 
@@ -154,6 +156,7 @@ function addCardEventListener() {
 
 function cardEvent() {
     if (choosing && !gameOver) {
+        lock = true;
         this.classList.toggle('active');
         exchange();
     }
@@ -200,6 +203,7 @@ async function startNewRound() {
     
     players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
     if (!singlePlayer) choosing = false;
+    lock = false;
 }
 
 async function moveOut(tickedCards) {
@@ -623,7 +627,7 @@ async function growTable() {
 
 assistBtn.addEventListener('click', async () => {
     if (assistType == 'number_assist') {
-        if ((!choosing || singlePlayer) && !lock) {
+        if (!lock) {
             lock = true;
     
             let elem = document.createElement('div');
@@ -644,7 +648,7 @@ assistBtn.addEventListener('click', async () => {
             lock = false;
         }
     } else if (assistType == 'show_assist') {
-        if ((!choosing || singlePlayer) && !lock && sets.length > 0) {
+        if (!lock && sets.length > 0) {
             lock = true;
             let set = sets[Math.floor(Math.random() * sets.length)];
     
@@ -685,7 +689,7 @@ async function winner() {
 
 
 grow.addEventListener('click', async () => {
-    if (!lock && (!choosing || singlePlayer) && board.classList.contains('unlock')) {
+    if (!lock) {
         lock = true;
         if (singlePlayer) board.classList.remove('unlock');
         board.classList.remove('unlock');
