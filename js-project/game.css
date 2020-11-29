@@ -26,12 +26,42 @@
     width: 40%;
 }
 
+#description {
+    background-color: rgb(15, 7, 1, .7);
+    border: 2px solid rgba(0, 0, 0, .1);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transform: scale(.3);
+    transition: all .5s ease, font-size 0s;
+    display: block;
+    padding: 1% 5%;
+
+    visibility: hidden;
+    opacity: 0;
+
+    font-size: 1.7vw;
+    color: rgba(255, 255, 255, .8);
+}
+#description.appear {
+    transform: scale(1);
+    opacity: .9;
+    visibility: visible;
+}
+#description img {
+    height: 20%;
+    display: block;
+    background-color: white;
+    margin: auto;
+}
+
 #container {
     position: relative;
     width: 100%;
     padding-bottom: 63%;
     min-height: 500px;
     min-width: 800px;
+    margin-bottom: 2%;
 }
 
 #winner {
@@ -50,7 +80,6 @@
     transform: scale(.3);
     transition: all .5s;
 }
-
 #winner.appear {
     opacity: 1;
     transform: scale(1);

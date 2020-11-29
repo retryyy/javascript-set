@@ -12,7 +12,7 @@ let welcome = document.querySelector('#welcome');
 let sidebarClick = document.querySelector('#sidebarClick');
 let sidebar = document.querySelector('#sidebar');
 let menu = document.querySelector('#menu');
-let menuClose = menu.querySelector('.close');
+let menuClose = menu.querySelector('#close-menu');
 let start = menu.querySelector('#start');
 let settings = menu.querySelector('#settings');
 let playerName = menu.querySelector('#player-name');
@@ -22,7 +22,9 @@ let proceed = playerName.querySelector('#proceed');
 let stepper = document.querySelector('#stepper');
 let logo = document.querySelector('#logo');
 let game = document.querySelector('#game');
-let layout = document.querySelector('#layout');
+let description = game.querySelector('#description');
+let descClose = game.querySelector('#close-desc');
+let layout = game.querySelector('#layout');
 let players = layout.querySelector('#players');
 let assistBtn = layout.querySelector('#assist');
 let assists = menu.querySelectorAll('input[name="toggle_option"]');
@@ -78,7 +80,7 @@ function createDeck() {
 // load
 loadPage();
 async function loadPage() {
-    await sleep(000);
+    await sleep(3000);
 
     sidebarClick.classList.add('opened');
     sidebar.classList.add('opened');
@@ -193,6 +195,7 @@ async function exchange() {
             }
         }
         setSets();
+        refreshPlayersTable()
 
         if (activeCardArray.length != 0) {
             while (sets.length == 0 && cardArray.length != 0) {
@@ -221,9 +224,8 @@ async function exchange() {
 }
 
 async function startNewRound() {
-    refreshPlayersTable();
     if (singlePlayer) players.querySelector('td').classList.add('active');
-    resetTimer();
+    await resetTimer();
     
     if (!singlePlayer) {
         let ps = players.querySelectorAll('tr');
@@ -281,6 +283,7 @@ sidebarClick.addEventListener('click', () => {
         sidebarClick.firstElementChild.classList.toggle('click');
 
         if (sidebar.classList.contains('opened')) {
+            description.classList.remove('appear');
             menu.classList.remove('appear');
             layout.classList.remove('appear');
             logo.classList.add('appear');
@@ -288,12 +291,22 @@ sidebarClick.addEventListener('click', () => {
             layout.classList.add('appear');
             logo.classList.remove('appear');
         }
-    }  
+    }
 });
 
 // menu
 sidebar.querySelector('#new').addEventListener('click', () => {
     menu.classList.toggle('appear');
+    sidebarClick.classList.toggle('opened');
+    sidebar.classList.toggle('opened');
+    sidebarClick.firstElementChild.classList.remove('click');
+
+    layout.classList.remove('appear');
+    logo.classList.remove('appear');
+});
+
+sidebar.querySelector('#desc').addEventListener('click', () => {
+    description.classList.toggle('appear');
     sidebarClick.classList.toggle('opened');
     sidebar.classList.toggle('opened');
     sidebarClick.firstElementChild.classList.remove('click');
@@ -346,6 +359,10 @@ proceed.addEventListener('click', async () => {
 
         gameOngoing = true;
         gameOver = false;
+        lock = false;
+        mode = "";
+        board.className = '';
+        await sleep(100);
 
         return;
     }
@@ -455,7 +472,20 @@ menuClose.addEventListener('click', async () => {
     resetMenu();
     settings.classList.add('appear');
     playerName.classList.remove('appear');
-})
+});
+descClose.addEventListener('click', async () => {
+    logo.classList.add('appear');
+
+    description.classList.remove('appear');
+    sidebarClick.classList.add('opened');
+    sidebar.classList.add('opened');
+    sidebarClick.firstElementChild.classList.add('click');
+
+    await sleep(500);
+
+    settings.classList.add('appear');
+    playerName.classList.remove('appear');
+});
 
 check.addEventListener('click', () => {
     if (check.checked) {
@@ -726,7 +756,8 @@ assistBtn.addEventListener('click', async () => {
 
 async function winner() {
     let elem = document.createElement('div');
-    elem.innerText = playersInfo[0].name + ' won';
+    let playerName = singlePlayer ? "You" : playersInfo[0].name;
+    elem.innerText = playerName + ' won!';
     elem.setAttribute('id', 'winner');
     container.appendChild(elem);
 
@@ -734,7 +765,7 @@ async function winner() {
     layout.classList.remove('appear');
     elem.classList.add('appear');
 
-    await sleep(3000);
+    await sleep(4000);
     elem.classList.remove('appear');
 
     await sleep(1000);
@@ -742,7 +773,7 @@ async function winner() {
 }
 
 grow.addEventListener('click', async () => {
-    if (!lock) {
+    if (!lock && cardArray.length != 0) {
         lock = true;
         if (singlePlayer) board.classList.remove('unlock');
         board.classList.remove('unlock');
