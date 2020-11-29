@@ -108,6 +108,13 @@ async function countDown() {
         cards.forEach(card => card.classList.remove('active'));
         board.classList.remove('unlock');
         playersInfo[activePlayer].score -= 1;
+
+        if (!singlePlayer) {
+            playersInfo[activePlayer].choose = false;
+
+            let choosers = playersInfo.filter(p => p.choose == true);
+            if (choosers.length == 0) playersInfo.forEach(player => player.choose = true);
+        }
         
         await startNewRound();
     }
@@ -130,19 +137,21 @@ async function resetTimer() {
 // game
 players.addEventListener('click', (item) => {
     if (!choosing && !gameOver && !lock && !singlePlayer) {
-        players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
-        board.classList.add('unlock');
-
-        choosing = true;
-        lock = true;
-
-        acted = false;
-        setTimeout(countDown, 0);
-
         let td = item.target.parentElement;
-        td.classList.toggle('active');
-
         activePlayer = td.parentElement.rowIndex;
+
+        if (playersInfo[activePlayer].choose != false) {
+            td.classList.toggle('active');
+
+            players.querySelectorAll('tr').forEach(plate => plate.classList.remove('lock'));
+            board.classList.add('unlock');
+    
+            choosing = true;
+            lock = true;
+    
+            acted = false;
+            setTimeout(countDown, 0);
+        }
     }
 });
 
@@ -171,7 +180,18 @@ async function exchange() {
 
         acted = true;
         let res = await checkSet(tickedCards);
-        res ? playersInfo[activePlayer].score += 1 : playersInfo[activePlayer].score -= 1;
+        if (res) {
+            playersInfo[activePlayer].score += 1;
+            if (!singlePlayer) playersInfo.forEach(player => player.choose = true);
+        } else {
+            playersInfo[activePlayer].score -= 1;
+            if (!singlePlayer) {
+                playersInfo[activePlayer].choose = false;
+
+                let choosers = playersInfo.filter(p => p.choose == true);
+                if (choosers.length == 0) playersInfo.forEach(player => player.choose = true);
+            }
+        }
         setSets();
 
         if (activeCardArray.length != 0) {
@@ -205,7 +225,17 @@ async function startNewRound() {
     if (singlePlayer) players.querySelector('td').classList.add('active');
     resetTimer();
     
-    players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
+    if (!singlePlayer) {
+        let ps = players.querySelectorAll('tr');
+        for (let i = 0; i < ps.length; i++) {
+            if (playersInfo[i].choose == true) {
+                ps[i].classList.remove('lock');
+            } else {
+                ps[i].querySelectorAll('div').forEach(e => e.classList.add('no-choose'));
+            }
+        }
+    }
+
     if (!singlePlayer) choosing = false;
     lock = false;
 }
@@ -296,7 +326,7 @@ proceed.addEventListener('click', async () => {
     let name = playerInput.value;
     if (!isValidInput(name)) return;
 
-    playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
+    playersInfo[nrOfInstantiatedPlayers] = {name: name, score: 0, choose: true};
     nrOfInstantiatedPlayers++;
 
     let preName = nrOfInstantiatedPlayers + 1;
