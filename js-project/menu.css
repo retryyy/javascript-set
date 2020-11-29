@@ -62,6 +62,10 @@
 	cursor: pointer;
     color: white;
 }
+#menu #settings tr.hide {
+    opacity: 0;
+    display: none;
+}
 
 #menu #player-name {
     width: 90%;

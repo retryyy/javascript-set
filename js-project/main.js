@@ -16,6 +16,7 @@ let menuClose = menu.querySelector('.close');
 let start = menu.querySelector('#start');
 let settings = menu.querySelector('#settings');
 let playerName = menu.querySelector('#player-name');
+let check = menu.querySelector('#check');
 let playerInput = playerName.querySelector('#player-name-input');
 let proceed = playerName.querySelector('#proceed');
 let stepper = document.querySelector('#stepper');
@@ -30,7 +31,8 @@ let container = game.querySelector('#container');
 let board = game.querySelector('#cards-board');
 let boardContainer = board.querySelector('#board');
 let cards = board.querySelectorAll('.card');
-let timer = game.querySelector('#timer');
+let bar = layout.querySelector('#bar');
+let timer = bar.querySelector('#timer');
 
 let gameOver = true;
 let gameOngoing = false;
@@ -193,6 +195,8 @@ async function exchange() {
         }
         await startNewRound();
         if (singlePlayer) board.classList.add('unlock');
+    } else if (tickedCards.length == 0) {
+        lock = false;
     }
 }
 
@@ -325,27 +329,34 @@ function onePlayerGameplay() {
         players.querySelector('td').classList.add('active');
         board.classList.add('unlock');
         activePlayer = 0;
+        bar.classList.add('hide');
     } else {
         singlePlayer = false;
         choosing = false;
+        bar.classList.remove('hide');
     }
 }
 
 function setAssistType() {
-    assists.forEach(e => {
-        if (e.checked) {
-            assistType = e.id;
+    if (!check.checked) {
+        assists.forEach(e => {
+            if (e.checked) {
+                assistType = e.id;
 
-            let btnText = assistBtn.querySelector('h1');
-            if (assistType == 'no_assist') {
-                assistBtn.style.visibility = 'hidden';
-            } else if (assistType == 'number_assist') {
-                btnText.innerText = 'IS THERE A SET?'
-            } else if (assistType == 'show_assist') {
-                btnText.innerText = 'WHERE IS A SET?'
+                let btnText = assistBtn.querySelector('h1');
+                if (assistType == 'no_assist') {
+                    assistBtn.style.visibility = 'hidden';
+                } else if (assistType == 'number_assist') {
+                    btnText.innerText = 'IS THERE A SET?'
+                } else if (assistType == 'show_assist') {
+                    btnText.innerText = 'WHERE IS A SET?'
+                }
             }
-        }
-    });
+        });
+    } else {
+        assistType = 'no_assist';
+        assistBtn.style.visibility = 'hidden';
+    }
 }
 
 async function generateDeck() {
@@ -415,6 +426,14 @@ menuClose.addEventListener('click', async () => {
     settings.classList.add('appear');
     playerName.classList.remove('appear');
 })
+
+check.addEventListener('click', () => {
+    if (check.checked) {
+        settings.querySelector('tr:nth-of-type(3)').classList.add('hide');
+    } else {
+        settings.querySelector('tr:nth-of-type(3)').classList.remove('hide');
+    }
+});
 
 function resetMenu() {
     stepper.value = 1;
@@ -629,6 +648,7 @@ assistBtn.addEventListener('click', async () => {
     if (assistType == 'number_assist') {
         if (!lock) {
             lock = true;
+            if (singlePlayer) board.classList.remove('unlock');
     
             let elem = document.createElement('div');
             elem.innerText = sets.length;
@@ -646,10 +666,13 @@ assistBtn.addEventListener('click', async () => {
             elem.remove();
     
             lock = false;
+            if (singlePlayer) board.classList.add('unlock');
         }
     } else if (assistType == 'show_assist') {
         if (!lock && sets.length > 0) {
             lock = true;
+            if (singlePlayer) board.classList.remove('unlock');
+
             let set = sets[Math.floor(Math.random() * sets.length)];
     
             for (let i = 0; i < activeCardArray.length; i++) {
@@ -666,6 +689,7 @@ assistBtn.addEventListener('click', async () => {
                 }
             }
             lock = false;
+            if (singlePlayer) board.classList.add('unlock');
         }
     }
 });
@@ -686,7 +710,6 @@ async function winner() {
     await sleep(1000);
     elem.remove();
 }
-
 
 grow.addEventListener('click', async () => {
     if (!lock) {
