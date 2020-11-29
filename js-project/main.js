@@ -34,8 +34,9 @@ let timer = game.querySelector('#timer');
 
 let gameOver = true;
 let gameOngoing = false;
-let choosing = false;
-let assist = false;
+let choosing;
+let lock = false;
+let singlePlayer;
 let activePlayer;
 let nrOfPlayers = 1;
 let nrOfInstantiatedPlayers = 0;
@@ -126,7 +127,7 @@ async function resetTimer() {
 
 // game
 players.addEventListener('click', (item) => {
-    if (!choosing && !gameOver && !assist) {
+    if (!choosing && !gameOver && !lock && !singlePlayer) {
         players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
         board.classList.add('unlock');
 
@@ -188,17 +189,17 @@ async function exchange() {
             return;
         }
         await startNewRound();
+        if (singlePlayer) board.classList.add('unlock');
     }
 }
 
 async function startNewRound() {
-    Array.from(players.querySelectorAll('tr')).forEach(player => player.classList.remove('active'));
-
     refreshPlayersTable();
+    if (singlePlayer) players.querySelector('td').classList.add('active');
     resetTimer();
     
     players.querySelectorAll('div').forEach(plate => plate.classList.remove('lock'));
-    choosing = false;
+    if (!singlePlayer) choosing = false;
 }
 
 async function moveOut(tickedCards) {
@@ -277,7 +278,10 @@ start.addEventListener('click', () => {
     playersInfo = [];
 });
 
-start.addEventListener('transitionend', () => playerInput.focus());
+start.addEventListener('transitionend', () => {
+    playerInput.focus();
+    playerInput.value = 'PLAYER 1';
+});
 
 //proceed
 proceed.addEventListener('click', async () => {
@@ -285,12 +289,15 @@ proceed.addEventListener('click', async () => {
     if (!isValidInput(name)) return;
 
     playersInfo[nrOfInstantiatedPlayers] = {'name': name, 'score': 0};
-    playerInput.value = "";
     nrOfInstantiatedPlayers++;
+
+    let preName = nrOfInstantiatedPlayers + 1;
+    playerInput.value = "PLAYER " + preName;
 
     if (nrOfInstantiatedPlayers == nrOfPlayers) {
         await generateDeck();
         refreshPlayersTable();
+        onePlayerGameplay();
 
         menu.classList.remove('appear');
         layout.classList.add('appear');
@@ -307,9 +314,33 @@ proceed.addEventListener('click', async () => {
     playerName.querySelector('label span').innerText = nrOfInstantiatedPlayers + 1;
 })
 
+function onePlayerGameplay() {
+    if (nrOfPlayers == 1) {
+        singlePlayer = true;
+        choosing = true;
+        players.querySelector('td').classList.add('active');
+        board.classList.add('unlock');
+        activePlayer = 0;
+    } else {
+        singlePlayer = false;
+        choosing = false;
+    }
+}
+
 function setAssistType() {
     assists.forEach(e => {
-        if (e.checked) assistType = e.id;
+        if (e.checked) {
+            assistType = e.id;
+
+            let btnText = assistBtn.querySelector('h1');
+            if (assistType == 'no_assist') {
+                assistBtn.style.visibility = 'hidden';
+            } else if (assistType == 'number_assist') {
+                btnText.innerText = 'IS THERE A SET?'
+            } else if (assistType == 'show_assist') {
+                btnText.innerText = 'WHERE IS A SET?'
+            }
+        }
     });
 }
 
@@ -592,8 +623,8 @@ async function growTable() {
 
 assistBtn.addEventListener('click', async () => {
     if (assistType == 'number_assist') {
-        if (!choosing && !assist) {
-            assist = true;
+        if ((!choosing || singlePlayer) && !lock) {
+            lock = true;
     
             let elem = document.createElement('div');
             elem.innerText = sets.length;
@@ -610,11 +641,11 @@ assistBtn.addEventListener('click', async () => {
             await sleep(1000);
             elem.remove();
     
-            assist = false;
+            lock = false;
         }
     } else if (assistType == 'show_assist') {
-        if (!choosing && !assist && sets.length > 0) {
-            assist = true;
+        if ((!choosing || singlePlayer) && !lock && sets.length > 0) {
+            lock = true;
             let set = sets[Math.floor(Math.random() * sets.length)];
     
             for (let i = 0; i < activeCardArray.length; i++) {
@@ -630,7 +661,7 @@ assistBtn.addEventListener('click', async () => {
                     cards[i].firstElementChild.style.transition = 'opacity 0';
                 }
             }
-            assist = false;
+            lock = false;
         }
     }
 });
@@ -654,6 +685,13 @@ async function winner() {
 
 
 grow.addEventListener('click', async () => {
-    await growTable();
-    setSets();
+    if (!lock && (!choosing || singlePlayer) && board.classList.contains('unlock')) {
+        lock = true;
+        if (singlePlayer) board.classList.remove('unlock');
+        board.classList.remove('unlock');
+        await growTable();
+        setSets();
+        if (singlePlayer) board.classList.add('unlock');
+        lock = false;
+    }
 })
