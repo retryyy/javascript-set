@@ -19,11 +19,6 @@
     transform: scale(1);
     opacity: 1;
 }
-
-#layout table, #layout tr, #layout td {
-    border: 2px solid red;
-}
-
 #game #layout > tbody > tr:nth-child(2) {
     height: 10%;
 }
@@ -35,8 +30,8 @@
     position: relative;
     width: 100%;
     padding-bottom: 63%;
-    min-height: 655px;
-    min-width: 1024px;
+    min-height: 500px;
+    min-width: 800px;
 }
 
 #winner {
@@ -48,7 +43,6 @@
     align-items: center;
     pointer-events: none;
 
-    pointer-events: none;
     font-size: 8vw;
     color: white;
     opacity: 0;

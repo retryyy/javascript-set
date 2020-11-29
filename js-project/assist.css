@@ -20,6 +20,7 @@ h1.assist {
     background-color: rgba(170, 65, 15, .4);
     box-shadow: 0px 0px 8px 8px rgba(0, 0, 0, .3);
     opacity: .5;
+    font-size: 2vw;
 }
 h1.assist:hover {
     padding: 1.5%;

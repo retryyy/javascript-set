@@ -23,7 +23,7 @@
     margin: auto;
 }
 #menu #settings tr:first-child {
-    font-size: 300%;
+    font-size: 4vw;
     background: rgba(255, 255, 255, 0.1);
 }
 #menu #settings tr {
@@ -39,7 +39,7 @@
     vertical-align: middle;
     height: 100%;
     margin: auto;
-    font-size: x-large;
+    font-size: 2vw;;
     font-weight: bold;
     color: white;
     transition: all .5s ease;
@@ -71,7 +71,7 @@
     width: 90%;
     height: 100%;
     margin: auto;
-    font-size: x-large;
+    font-size: 2vw;;
     font-weight: bold;
     color: white;
     opacity: 0;
